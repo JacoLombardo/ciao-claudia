@@ -6,12 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "populate-db": "node scripts/populate-db.js",
+    "populate-claudiate": "node scripts/populate-claudiate.js"
   },
   "dependencies": {
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.4.6"
+    "next": "15.4.6",
+    "mongodb": "^6.3.0",
+    "react-webcam": "^7.2.0"
   },
   "devDependencies": {
     "typescript": "^5",
