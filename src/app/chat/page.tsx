@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import styles from "./page.module.css";
 
 interface Message {
   id: string;
@@ -36,16 +37,13 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-pink-100">
+    <div className={styles.container}>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-          >
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <Link href="/" className={styles.backLink}>
             <svg
-              className="w-5 h-5 mr-2"
+              className={styles.backIcon}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -59,9 +57,9 @@ export default function ChatPage() {
             </svg>
             Back to Home
           </Link>
-          <h1 className="text-2xl font-bold text-purple-800 flex items-center">
+          <h1 className={styles.title}>
             <svg
-              className="w-6 h-6 mr-2"
+              className={styles.titleIcon}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -75,19 +73,19 @@ export default function ChatPage() {
             </svg>
             Ask Claudia
           </h1>
-          <div className="w-20"></div> {/* Spacer for centering */}
+          <div className={styles.spacer}></div> {/* Spacer for centering */}
         </div>
       </div>
 
       {/* Chat Container */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className={styles.content}>
+        <div className={styles.chatContainer}>
           {/* Messages Area */}
-          <div className="h-96 overflow-y-auto p-6 space-y-4">
+          <div className={styles.messagesArea}>
             {messages.length === 0 ? (
-              <div className="text-center text-gray-500 py-12">
+              <div className={styles.emptyState}>
                 <svg
-                  className="w-12 h-12 mx-auto mb-4 text-gray-300"
+                  className={styles.emptyIcon}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -99,17 +97,17 @@ export default function ChatPage() {
                     d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                   />
                 </svg>
-                <p className="text-lg">No responses yet</p>
-                <p className="text-sm">
+                <p className={styles.emptyTitle}>No responses yet</p>
+                <p className={styles.emptySubtitle}>
                   Click the button below to ask Claudia what she did today!
                 </p>
               </div>
             ) : (
               messages.map((message) => (
-                <div key={message.id} className="flex justify-start">
-                  <div className="bg-purple-100 rounded-2xl px-4 py-3 max-w-xs lg:max-w-md">
-                    <p className="text-gray-800">{message.text}</p>
-                    <p className="text-xs text-gray-500 mt-2">
+                <div key={message.id} className={styles.messageContainer}>
+                  <div className={styles.message}>
+                    <p className={styles.messageText}>{message.text}</p>
+                    <p className={styles.messageTime}>
                       {message.timestamp.toLocaleTimeString()}
                     </p>
                   </div>
@@ -117,16 +115,16 @@ export default function ChatPage() {
               ))
             )}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-purple-100 rounded-2xl px-4 py-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
+              <div className={styles.loadingContainer}>
+                <div className={styles.loadingMessage}>
+                  <div className={styles.loadingDots}>
+                    <div className={styles.loadingDot}></div>
                     <div
-                      className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"
+                      className={styles.loadingDot}
                       style={{ animationDelay: "0.1s" }}
                     ></div>
                     <div
-                      className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"
+                      className={styles.loadingDot}
                       style={{ animationDelay: "0.2s" }}
                     ></div>
                   </div>
@@ -136,15 +134,15 @@ export default function ChatPage() {
           </div>
 
           {/* Input Area */}
-          <div className="border-t bg-gray-50 p-6">
-            <div className="flex items-center space-x-4">
+          <div className={styles.inputArea}>
+            <div className={styles.inputGroup}>
               <button
                 onClick={fetchMessageFromDatabase}
                 disabled={isLoading}
-                className="flex-1 bg-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2"
+                className={styles.askButton}
               >
                 <svg
-                  className="w-5 h-5"
+                  className={styles.askIcon}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -163,7 +161,7 @@ export default function ChatPage() {
                 </span>
               </button>
             </div>
-            <p className="text-sm text-gray-500 mt-3 text-center">
+            <p className={styles.helpText}>
               Click the button to ask Claudia what she did today and get a
               random response from her database
             </p>

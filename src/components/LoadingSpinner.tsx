@@ -1,5 +1,7 @@
 "use client";
 
+import styles from "./LoadingSpinner.module.css";
+
 interface LoadingSpinnerProps {
   isLoading: boolean;
 }
@@ -8,16 +10,12 @@ export default function LoadingSpinner({ isLoading }: LoadingSpinnerProps) {
   if (!isLoading) return null;
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
-      <div className="text-center">
-        <div className="animate-spin-reverse mb-4">
-          <img
-            src="/duck3.png"
-            alt="Loading..."
-            className="w-32 h-32 mx-auto"
-          />
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <div className={styles.spinner}>
+          <img src="/duck3.png" alt="Loading..." className={styles.image} />
         </div>
-        <p className="text-gray-700 text-xl font-semibold">Loading camera...</p>
+        <p className={styles.text}>Loading camera...</p>
       </div>
     </div>
   );

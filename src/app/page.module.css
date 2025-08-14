@@ -1,0 +1,155 @@
+/* Home Page Styles */
+.container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #fdf2f8, #faf5ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.content {
+  max-width: 42rem;
+  width: 100%;
+  text-align: center;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.greeting {
+  font-size: 3.75rem;
+  font-weight: 700;
+  color: #6b21a8;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #4b5563;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.optionsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.optionCard {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  transform: translateY(0);
+  border: 2px solid transparent;
+}
+
+.optionCard:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-0.5rem);
+}
+
+.askCard:hover {
+  border-color: #e9d5ff;
+}
+
+.cameraCard:hover {
+  border-color: #fce7f3;
+}
+
+.iconContainer {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  transition: background-color 0.3s;
+}
+
+.askIconContainer {
+  background-color: #f3e8ff;
+}
+
+.group:hover .askIconContainer {
+  background-color: #e9d5ff;
+}
+
+.cameraIconContainer {
+  background-color: #fce7f3;
+}
+
+.group:hover .cameraIconContainer {
+  background-color: #fbcfe8;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.askIcon {
+  color: #9333ea;
+}
+
+.cameraIcon {
+  color: #ec4899;
+}
+
+.optionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.optionDescription {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+.actionText {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.askActionText {
+  color: #9333ea;
+}
+
+.group:hover .askActionText {
+  color: #7c3aed;
+}
+
+.cameraActionText {
+  color: #ec4899;
+}
+
+.group:hover .cameraActionText {
+  color: #db2777;
+}
+
+.arrowIcon {
+  width: 1rem;
+  height: 1rem;
+  margin-left: 0.5rem;
+  transform: translateX(0);
+  transition: transform 0.3s;
+}
+
+.group:hover .arrowIcon {
+  transform: translateX(0.25rem);
+}
+
+.footer {
+  margin-top: 4rem;
+  color: #6b7280;
+}

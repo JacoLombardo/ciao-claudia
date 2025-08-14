@@ -1,28 +1,29 @@
 import Link from "next/link";
+import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center p-8">
-      <div className="max-w-2xl w-full text-center">
+    <div className={styles.container}>
+      <div className={styles.content}>
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-6xl font-bold text-purple-800 mb-4">
-            Ciao Claudia! 👋
-          </h1>
-          <p className="text-xl text-gray-600 max-w-md mx-auto">
+        <div className={styles.header}>
+          <h1 className={styles.greeting}>Ciao Claudia! 👋</h1>
+          <p className={styles.subtitle}>
             Welcome to your personal space with Claudia. Choose how you&apos;d
             like to interact with her today!
           </p>
         </div>
 
         {/* Navigation Cards */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className={styles.optionsContainer}>
           {/* Ask Claudia */}
           <Link href="/chat" className="group">
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-transparent hover:border-purple-200">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-200 transition-colors">
+            <div className={`${styles.optionCard} ${styles.askCard}`}>
+              <div
+                className={`${styles.iconContainer} ${styles.askIconContainer}`}
+              >
                 <svg
-                  className="w-8 h-8 text-purple-600"
+                  className={`${styles.icon} ${styles.askIcon}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -35,17 +36,15 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                Ask Claudia
-              </h2>
-              <p className="text-gray-600 mb-6">
+              <h2 className={styles.optionTitle}>Ask Claudia</h2>
+              <p className={styles.optionDescription}>
                 Ask Claudia what she did today and discover her daily adventures
                 from the database.
               </p>
-              <div className="inline-flex items-center text-purple-600 font-semibold group-hover:text-purple-700">
+              <div className={`${styles.actionText} ${styles.askActionText}`}>
                 Ask her now
                 <svg
-                  className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
+                  className={styles.arrowIcon}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -63,10 +62,12 @@ export default function Home() {
 
           {/* Take a pic with Claudia */}
           <Link href="/camera" className="group">
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-transparent hover:border-pink-200">
-              <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-pink-200 transition-colors">
+            <div className={`${styles.optionCard} ${styles.cameraCard}`}>
+              <div
+                className={`${styles.iconContainer} ${styles.cameraIconContainer}`}
+              >
                 <svg
-                  className="w-8 h-8 text-pink-600"
+                  className={`${styles.icon} ${styles.cameraIcon}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -85,16 +86,16 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                Take a Pic with Claudia
-              </h2>
-              <p className="text-gray-600 mb-6">
+              <h2 className={styles.optionTitle}>Take a Pic with Claudia</h2>
+              <p className={styles.optionDescription}>
                 Capture a special moment with Claudia using your camera.
               </p>
-              <div className="inline-flex items-center text-pink-600 font-semibold group-hover:text-pink-700">
+              <div
+                className={`${styles.actionText} ${styles.cameraActionText}`}
+              >
                 Open camera
                 <svg
-                  className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform"
+                  className={styles.arrowIcon}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -112,7 +113,7 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <div className="mt-16 text-gray-500">
+        <div className={styles.footer}>
           <p>Made with ❤️ for Claudia</p>
         </div>
       </div>

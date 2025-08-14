@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Webcam from "react-webcam";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import styles from "./page.module.css";
 
 export default function CameraPage() {
   const webcamRef = useRef<Webcam>(null);
@@ -166,16 +167,13 @@ export default function CameraPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 to-purple-100">
+    <div className={styles.container}>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-          >
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <Link href="/" className={styles.backLink}>
             <svg
-              className="w-5 h-5 mr-2"
+              className={styles.backIcon}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -189,9 +187,9 @@ export default function CameraPage() {
             </svg>
             Back to Home
           </Link>
-          <h1 className="text-2xl font-bold text-pink-800 flex items-center">
+          <h1 className={styles.title}>
             <svg
-              className="w-6 h-6 mr-2"
+              className={styles.titleIcon}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -211,7 +209,7 @@ export default function CameraPage() {
             </svg>
             Take a Pic with Claudia
           </h1>
-          <div className="w-20"></div> {/* Spacer for centering */}
+          <div className={styles.spacer}></div> {/* Spacer for centering */}
         </div>
       </div>
 
@@ -219,27 +217,27 @@ export default function CameraPage() {
       <LoadingSpinner isLoading={isLoading} />
       {!isLoading && (
         // Camera interface
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className={styles.content}>
+          <div className={styles.cameraContainer}>
             {/* Camera View */}
-            <div className="relative">
+            <div className={styles.cameraView}>
               {!capturedImage ? (
-                <div className="relative">
+                <div className={styles.cameraView}>
                   <Webcam
                     ref={webcamRef}
                     audio={false}
                     screenshotFormat="image/jpeg"
                     videoConstraints={videoConstraints}
-                    className="w-full h-auto"
+                    className={styles.webcam}
                     onUserMedia={handleUserMedia}
                     onUserMediaError={handleUserMediaError}
                     onLoad={() => console.log("Webcam onLoad fired")}
                   />
 
                   {/* Claudia's Photo Overlay for preview */}
-                  <div className="absolute inset-0 flex items-end justify-center pointer-events-none">
+                  <div className={styles.overlayContainer}>
                     <div
-                      className="relative mb-0"
+                      className={styles.claudiaContainer}
                       style={{ marginLeft: "35%" }}
                     >
                       <Image
@@ -248,32 +246,32 @@ export default function CameraPage() {
                         alt="Claudia"
                         width={500}
                         height={750}
-                        className="drop-shadow-lg w-[60%] min-w-[400px] max-w-[600px] object-contain"
+                        className={styles.claudiaImage}
                       />
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="relative">
+                <div className={styles.cameraView}>
                   <img
                     src={capturedImage}
                     alt="Captured photo with Claudia"
-                    className="w-full h-auto"
+                    className={styles.capturedImage}
                   />
                 </div>
               )}
             </div>
 
             {/* Controls */}
-            <div className="p-6 bg-gray-50">
+            <div className={styles.controls}>
               {!capturedImage ? (
-                <div className="flex items-center justify-center space-x-4">
+                <div className={styles.buttonGroup}>
                   <button
                     onClick={toggleCamera}
-                    className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center space-x-2"
+                    className={styles.switchButton}
                   >
                     <svg
-                      className="w-4 h-4"
+                      className={styles.switchIcon}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -288,12 +286,9 @@ export default function CameraPage() {
                     <span>Switch Camera</span>
                   </button>
 
-                  <button
-                    onClick={capture}
-                    className="bg-pink-600 text-white px-8 py-3 rounded-full hover:bg-pink-700 transition-colors flex items-center space-x-2 text-lg font-semibold"
-                  >
+                  <button onClick={capture} className={styles.captureButton}>
                     <svg
-                      className="w-6 h-6"
+                      className={styles.captureIcon}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -315,13 +310,10 @@ export default function CameraPage() {
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center justify-center space-x-4">
-                  <button
-                    onClick={retake}
-                    className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors flex items-center space-x-2"
-                  >
+                <div className={styles.buttonGroup}>
+                  <button onClick={retake} className={styles.retakeButton}>
                     <svg
-                      className="w-4 h-4"
+                      className={styles.retakeIcon}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -338,10 +330,10 @@ export default function CameraPage() {
 
                   <button
                     onClick={downloadImage}
-                    className="bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700 transition-colors flex items-center space-x-2"
+                    className={styles.downloadButton}
                   >
                     <svg
-                      className="w-4 h-4"
+                      className={styles.downloadIcon}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -358,7 +350,7 @@ export default function CameraPage() {
                 </div>
               )}
 
-              <p className="text-sm text-gray-500 mt-4 text-center">
+              <p className={styles.helpText}>
                 {!capturedImage
                   ? "Position yourself next to Claudia&apos;s photo and take a picture!"
                   : "Great shot! You can download it or take another one."}
