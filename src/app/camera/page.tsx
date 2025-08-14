@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Webcam from "react-webcam";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function CameraPage() {
   const webcamRef = useRef<Webcam>(null);
@@ -11,7 +12,7 @@ export default function CameraPage() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<"user" | "environment">("user");
   const [isMobile, setIsMobile] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // Start with loading true
+  const [isLoading, setIsLoading] = useState(false); // Start with loading false
 
   // Responsive video constraints - portrait for mobile, landscape for desktop
   const videoConstraints = {
@@ -32,10 +33,25 @@ export default function CameraPage() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Debug loading state
+  useEffect(() => {
+    console.log("Loading state changed to:", isLoading);
+  }, [isLoading]);
+
   // Handle camera loading state
   const handleUserMedia = useCallback(() => {
-    console.log("Camera ready - turning off loading");
-    setIsLoading(false);
+    console.log("Camera stream started");
+    // Wait for the video element to actually show content
+    const checkVideoReady = () => {
+      const video = webcamRef.current?.video;
+      if (video && video.readyState >= 2) {
+        console.log("Video ready, turning off loading");
+        setIsLoading(false);
+      } else {
+        setTimeout(checkVideoReady, 100);
+      }
+    };
+    checkVideoReady();
   }, []);
 
   const handleUserMediaError = useCallback(() => {
@@ -200,23 +216,8 @@ export default function CameraPage() {
       </div>
 
       {/* Content */}
-      {isLoading ? (
-        // Full page loading screen
-        <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
-          <div className="text-center">
-            <div className="animate-spin-reverse mb-4">
-              <img
-                src="/duck3.png"
-                alt="Loading..."
-                className="w-32 h-32 mx-auto"
-              />
-            </div>
-            <p className="text-gray-700 text-xl font-semibold">
-              Loading camera...
-            </p>
-          </div>
-        </div>
-      ) : (
+      <LoadingSpinner isLoading={isLoading} />
+      {!isLoading && (
         // Camera interface
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -232,6 +233,7 @@ export default function CameraPage() {
                     className="w-full h-auto"
                     onUserMedia={handleUserMedia}
                     onUserMediaError={handleUserMediaError}
+                    onLoad={() => console.log("Webcam onLoad fired")}
                   />
 
                   {/* Claudia's Photo Overlay for preview */}
