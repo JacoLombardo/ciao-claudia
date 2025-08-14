@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Ciao Claudia",
   description: "Talk with Claudia or take a picture with her",
+  icons: {
+    icon: "/duck1.png",
+  },
 };
 
 export default function RootLayout({

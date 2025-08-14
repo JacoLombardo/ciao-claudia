@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
 // MongoDB connection string from environment variable
-const MONGODB_URI = `mongodb+srv://Claudia:${process.env.MONGODB_KEY}@cluster0.zt4gj7q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const MONGODB_URI = process.env.MONGODB_URI || "";
 
 // Fallback messages in case database connection fails
 const fallbackMessages = [
@@ -34,39 +34,32 @@ async function connectToMongoDB() {
   return client;
 }
 
-async function getMessageFromDatabase() {
+async function getAllMessagesFromDatabase() {
   const client = await connectToMongoDB();
   try {
     const database = client.db("claudia-app");
 
     // Try to get from the claudiate collection first (your new collection)
     let collection = database.collection("claudiate");
-    let messages = await collection
-      .aggregate([{ $sample: { size: 1 } }])
-      .toArray();
+    let messages = await collection.find({}).toArray();
 
     // If claudiate collection is empty or doesn't exist, try the messages collection
     if (messages.length === 0) {
       collection = database.collection("messages");
-      messages = await collection
-        .aggregate([{ $sample: { size: 1 } }])
-        .toArray();
+      messages = await collection.find({}).toArray();
     }
 
-    // If no messages in database, return a random message from our fallback array
+    // If no messages in database, return fallback messages
     if (messages.length === 0) {
-      return fallbackMessages[
-        Math.floor(Math.random() * fallbackMessages.length)
-      ];
+      return fallbackMessages;
     }
 
-    // Return the message text, or fallback if no text field
-    return (
-      messages[0]?.text ||
-      messages[0]?.claudiate ||
-      messages[0] ||
-      fallbackMessages[Math.floor(Math.random() * fallbackMessages.length)]
-    );
+    // Extract text from messages, handling different field names
+    const extractedMessages = messages
+      .map((msg) => msg.text || msg.claudiate || msg.message || msg)
+      .filter(Boolean);
+
+    return extractedMessages.length > 0 ? extractedMessages : fallbackMessages;
   } finally {
     await client.close();
   }
@@ -74,22 +67,19 @@ async function getMessageFromDatabase() {
 
 export async function GET() {
   try {
-    // Get a message from the MongoDB database
-    const message = await getMessageFromDatabase();
+    // Get all messages from the MongoDB database
+    const messages = await getAllMessagesFromDatabase();
 
     return NextResponse.json({
-      message: message,
+      messages: messages,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Error fetching message:", error);
+    console.error("Error fetching messages:", error);
 
     // Fallback to local messages if database connection fails
-    const fallbackMessage =
-      fallbackMessages[Math.floor(Math.random() * fallbackMessages.length)];
-
     return NextResponse.json({
-      message: fallbackMessage,
+      messages: fallbackMessages,
       timestamp: new Date().toISOString(),
     });
   }

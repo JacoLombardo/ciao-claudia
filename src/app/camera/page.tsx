@@ -147,7 +147,7 @@ export default function CameraPage() {
         cameraImg.src = imageSrc;
       }
     }
-  }, [webcamRef]);
+  }, [webcamRef, isMobile]);
 
   const retake = () => {
     setCapturedImage(null);
@@ -253,9 +253,11 @@ export default function CameraPage() {
                 </div>
               ) : (
                 <div className={styles.cameraView}>
-                  <img
+                  <Image
                     src={capturedImage}
                     alt="Captured photo with Claudia"
+                    width={1280}
+                    height={720}
                     className={styles.capturedImage}
                   />
                 </div>
