@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
-// MongoDB connection string
-const MONGODB_URI =
-  "mongodb+srv://Claudia:Claudia1@cluster0.zt4gj7q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// MongoDB connection string from environment variable
+const MONGODB_URI = `mongodb+srv://Claudia:${process.env.MONGODB_KEY}@cluster0.zt4gj7q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Fallback messages in case database connection fails
 const fallbackMessages = [
