@@ -30,7 +30,6 @@ const translations = {
     tellMeStory: "Tell me a story, Claudia!",
     loadingCamera: "Loading camera...",
     noStories: "No stories available",
-    loading: "Loading...",
 
     // Camera page
     takePicWithClaudia: "Take a Pic with Claudia",
@@ -60,7 +59,6 @@ const translations = {
     tellMeStory: "Raccontami una storia, Claudia!",
     loadingCamera: "Caricamento fotocamera...",
     noStories: "Nessuna storia disponibile",
-    loading: "Caricamento...",
 
     // Camera page
     takePicWithClaudia: "Fai una Foto con Claudia",

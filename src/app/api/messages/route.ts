@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
 // MongoDB connection string - use environment variable
@@ -13,7 +13,7 @@ interface Story {
   createdAt: Date;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const client = new MongoClient(MONGODB_URI);
     await client.connect();
@@ -26,7 +26,8 @@ export async function GET(request: NextRequest) {
 
     if (dbStories.length > 0) {
       // Convert MongoDB documents to our Story interface
-      stories = dbStories.map((doc) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      stories = dbStories.map((doc: any) => ({
         id: doc.id || doc._id?.toString() || `story-${Date.now()}`,
         text: doc.text || "Unknown story",
         language: doc.language || "it",
@@ -37,7 +38,8 @@ export async function GET(request: NextRequest) {
       const oldStories = await db.collection("claudiate").find({}).toArray();
       if (oldStories.length > 0) {
         // Convert old format to new format
-        stories = oldStories.map((story, index: number) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        stories = oldStories.map((story: any, index: number) => ({
           id: `legacy-${index + 1}`,
           text: story.claudiate || story.text || "Unknown story",
           language: "it" as const, // Assume Italian for old stories
