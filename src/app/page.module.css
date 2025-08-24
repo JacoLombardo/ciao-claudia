@@ -1,165 +1,115 @@
 /* Home Page Styles */
 .container {
   min-height: 100vh;
-  background: radial-gradient(
-      900px 900px at 0% 20%,
-      rgba(34, 197, 94, 0.2),
-      transparent 45%
-    ),
-    radial-gradient(
-      700px 700px at 100% 0%,
-      rgba(214, 184, 138, 0.22),
-      transparent 40%
-    ),
-    linear-gradient(135deg, #e6f4ea 0%, #f5e6cc 100%);
+  background: #2d5a27; /* Solid green background */
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2rem;
-}
-
-.content {
-  max-width: 42rem;
-  width: 100%;
-  text-align: center;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
 }
 
 .header {
+  text-align: center;
   margin-bottom: 3rem;
 }
 
-.greeting {
-  font-size: 3.75rem;
+.title {
+  font-size: 3.5rem;
   font-weight: 700;
-  color: #166534; /* green-800 */
+  color: #f5f5dc; /* Light beige/cream */
   margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .subtitle {
   font-size: 1.25rem;
-  color: #3f3f46;
-  max-width: 28rem;
-  margin: 0 auto;
+  color: #d2b48c; /* Light brown */
+  margin-bottom: 2rem;
+  opacity: 0.9;
 }
 
-.optionsContainer {
+.cardsContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  max-width: 64rem;
-  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
 }
 
-.optionCard {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s;
-  transform: translateY(0);
-  border: 2px solid transparent;
+.card {
+  background: linear-gradient(
+    135deg,
+    #8fbc8f,
+    #a8c090
+  ); /* Light green to light brown-green */
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  text-decoration: none;
+  color: #2d5a27; /* Dark green text */
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 2px solid #d2b48c; /* Light brown border */
 }
 
-.optionCard:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  transform: translateY(-0.5rem);
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    135deg,
+    #9acd9a,
+    #b8d0a8
+  ); /* Slightly lighter on hover */
 }
 
-.askCard:hover {
-  border-color: #d9f99d; /* lime-200 */
-}
-
-.cameraCard:hover {
-  border-color: #fde68a; /* amber-200 */
-}
-
-.iconContainer {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  transition: background-color 0.3s;
-}
-
-.askIconContainer {
-  background-color: #ecfccb; /* lime-100 */
-}
-
-.group:hover .askIconContainer {
-  background-color: #d9f99d; /* lime-200 */
-}
-
-.cameraIconContainer {
-  background-color: #fef3c7; /* amber-100 */
-}
-
-.group:hover .cameraIconContainer {
-  background-color: #fde68a; /* amber-200 */
-}
-
-.icon {
-  width: 2rem;
-  height: 2rem;
-}
-
-.askIcon {
-  color: #16a34a; /* green-600 */
-}
-
-.cameraIcon {
-  color: #ca8a04; /* amber-600 */
-}
-
-.optionTitle {
+.cardTitle {
   font-size: 1.5rem;
-  font-weight: 700;
-  color: #1f2937;
+  font-weight: 600;
   margin-bottom: 1rem;
+  color: #2d5a27; /* Dark green */
 }
 
-.optionDescription {
-  color: #4b5563;
+.cardDescription {
+  font-size: 1rem;
+  color: #4a5d23; /* Darker green-brown */
+  line-height: 1.6;
   margin-bottom: 1.5rem;
 }
 
-.actionText {
-  display: inline-flex;
-  align-items: center;
-  font-weight: 600;
-}
-
-.askActionText {
-  color: #16a34a;
-}
-
-.group:hover .askActionText {
-  color: #15803d; /* green-700 */
-}
-
-.cameraActionText {
-  color: #ca8a04;
-}
-
-.group:hover .cameraActionText {
-  color: #a16207; /* amber-700 */
-}
-
-.arrowIcon {
-  width: 1rem;
-  height: 1rem;
-  margin-left: 0.5rem;
-  transform: translateX(0);
-  transition: transform 0.3s;
-}
-
-.group:hover .arrowIcon {
-  transform: translateX(0.25rem);
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
+  color: #2d5a27; /* Dark green */
 }
 
 .footer {
-  margin-top: 4rem;
-  color: #6b7280;
+  margin-top: 3rem;
+  text-align: center;
+  color: #d2b48c; /* Light brown */
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .cardsContainer {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .card {
+    padding: 2rem;
+  }
 }

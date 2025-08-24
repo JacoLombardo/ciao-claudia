@@ -2,74 +2,80 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import styles from "./page.module.css";
 
 interface Story {
   id: string;
   text: string;
-  timestamp: Date;
+  language: "en" | "it";
 }
 
 export default function ChatPage() {
+  const { t, language } = useLanguage();
   const [stories, setStories] = useState<Story[]>([]);
   const [displayedStories, setDisplayedStories] = useState<Story[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [hasLoadedAll, setHasLoadedAll] = useState(false);
 
-  // Fetch all stories on first load
-  useEffect(() => {
-    fetchAllStories();
-  }, []);
-
+  // Fetch all stories from the database
   const fetchAllStories = async () => {
-    setIsLoading(true);
     try {
-      const response = await fetch("/api/stories");
+      const response = await fetch("/api/messages");
       if (response.ok) {
         const data = await response.json();
-        const allStories: Story[] = data.messages.map(
-          (msg: string, index: number) => ({
-            id: `story-${index}`,
-            text: msg,
-            timestamp: new Date(),
-          })
-        );
-        setStories(allStories);
+        setStories(data.messages || []);
         setHasLoadedAll(true);
       } else {
         console.error("Failed to fetch stories");
       }
     } catch (error) {
       console.error("Error fetching stories:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
+  // Show the next story in random order without repetition
   const showNextStory = () => {
-    if (stories.length === 0) return;
-
-    // Get remaining stories that haven't been displayed yet
-    const remainingStories = stories.filter(
-      (story) =>
-        !displayedStories.some((displayed) => displayed.id === story.id)
+    // Filter stories by current language
+    const filteredStories = stories.filter(
+      (story) => story.language === language
     );
 
-    if (remainingStories.length === 0) {
-      // All stories have been shown, reset and start over
-      setDisplayedStories([]);
-      return;
+    if (filteredStories.length === 0) return;
+
+    // If we've shown all stories, reset the displayed list
+    if (displayedStories.length === 0) {
+      // Create a shuffled copy of filtered stories
+      const shuffled = [...filteredStories].sort(() => Math.random() - 0.5);
+      setDisplayedStories(shuffled);
+      setCurrentStoryIndex(0);
+    } else {
+      // Move to the next story
+      setCurrentStoryIndex((prev) => (prev + 1) % displayedStories.length);
     }
-
-    // Pick a random story from remaining ones
-    const randomIndex = Math.floor(Math.random() * remainingStories.length);
-    const nextStory = remainingStories[randomIndex];
-
-    setDisplayedStories((prev) => [...prev, nextStory]);
   };
+
+  // Fetch stories on component mount
+  useEffect(() => {
+    fetchAllStories();
+  }, []);
+
+  // Reset displayed stories when language changes
+  useEffect(() => {
+    setDisplayedStories([]);
+    setCurrentStoryIndex(0);
+  }, [language]);
+
+  // Filter stories by current language
+  const filteredStories = stories.filter(
+    (story) => story.language === language
+  );
 
   return (
     <div className={styles.container}>
+      <LanguageSwitcher />
+
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerContent}>
@@ -87,7 +93,7 @@ export default function ChatPage() {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            Back to Home
+            {t("backToHome")}
           </Link>
           <h1 className={styles.title}>
             <svg
@@ -103,123 +109,39 @@ export default function ChatPage() {
                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
               />
             </svg>
-            Claudia&apos;s Stories
+            {t("claudiaStories")}
           </h1>
-          <div className={styles.spacer}></div> {/* Spacer for centering */}
+          <div className={styles.spacer}></div>
         </div>
       </div>
 
-      {/* Chat Container */}
+      {/* Content */}
       <div className={styles.content}>
-        <div className={styles.chatContainer}>
-          {/* Stories Area */}
-          <div className={styles.messagesArea}>
-            {!hasLoadedAll ? (
-              <div className={styles.emptyState}>
-                <svg
-                  className={styles.emptyIcon}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-                <p className={styles.emptyTitle}>
-                  Loading Claudia&apos;s stories...
+        {!hasLoadedAll ? (
+          <p className={styles.loading}>{t("loading")}</p>
+        ) : filteredStories.length === 0 ? (
+          <p className={styles.noStories}>{t("noStories")}</p>
+        ) : (
+          <>
+            {/* Story Display */}
+            {displayedStories.length > 0 && (
+              <div className={styles.storyCard}>
+                <p className={styles.storyText}>
+                  {displayedStories[currentStoryIndex]?.text}
                 </p>
-                <p className={styles.emptySubtitle}>
-                  Please wait while we gather her adventures
-                </p>
-              </div>
-            ) : displayedStories.length === 0 ? (
-              <div className={styles.emptyState}>
-                <svg
-                  className={styles.emptyIcon}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-                <p className={styles.emptyTitle}>Ready for stories!</p>
-                <p className={styles.emptySubtitle}>
-                  Click the button below to hear Claudia&apos;s adventures
-                </p>
-              </div>
-            ) : (
-              displayedStories.map((story) => (
-                <div key={story.id} className={styles.messageContainer}>
-                  <div className={styles.message}>
-                    <p className={styles.messageText}>{story.text}</p>
-                    <p className={styles.messageTime}>
-                      {story.timestamp.toLocaleTimeString()}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
-            {isLoading && (
-              <div className={styles.loadingContainer}>
-                <div className={styles.loadingMessage}>
-                  <div className={styles.loadingDots}>
-                    <div className={styles.loadingDot}></div>
-                    <div
-                      className={styles.loadingDot}
-                      style={{ animationDelay: "0.1s" }}
-                    ></div>
-                    <div
-                      className={styles.loadingDot}
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
-                  </div>
-                </div>
               </div>
             )}
-          </div>
 
-          {/* Input Area */}
-          <div className={styles.inputArea}>
-            <div className={styles.inputGroup}>
-              <button
-                onClick={showNextStory}
-                disabled={isLoading || !hasLoadedAll}
-                className={styles.askButton}
-              >
-                <svg
-                  className={styles.askIcon}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-                <span>
-                  {isLoading
-                    ? "Loading stories..."
-                    : "Tell me a story, Claudia!"}
-                </span>
-              </button>
-            </div>
-            <p className={styles.helpText}>
-              Click the button to hear Claudia's stories!
-            </p>
-          </div>
-        </div>
+            {/* Ask Button */}
+            <button
+              onClick={showNextStory}
+              className={styles.askButton}
+              disabled={filteredStories.length === 0}
+            >
+              {t("tellMeStory")}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

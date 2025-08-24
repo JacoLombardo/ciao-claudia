@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 import styles from "./LoadingSpinner.module.css";
 
 interface LoadingSpinnerProps {
@@ -8,6 +9,8 @@ interface LoadingSpinnerProps {
 }
 
 export default function LoadingSpinner({ isLoading }: LoadingSpinnerProps) {
+  const { t } = useLanguage();
+
   if (!isLoading) return null;
 
   return (
@@ -22,7 +25,7 @@ export default function LoadingSpinner({ isLoading }: LoadingSpinnerProps) {
             className={styles.image}
           />
         </div>
-        <p className={styles.text}>Loading camera...</p>
+        <p className={styles.text}>{t("loadingCamera")}</p>
       </div>
     </div>
   );

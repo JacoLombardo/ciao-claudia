@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "populate-db": "node scripts/populate-db.js",
-    "populate-claudiate": "node scripts/populate-claudiate.js"
+    "populate-claudiate": "node scripts/populate-claudiate.js",
+    "populate-bilingual": "node scripts/populate-bilingual.js"
   },
   "dependencies": {
     "react": "19.1.0",

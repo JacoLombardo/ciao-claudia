@@ -1,29 +1,27 @@
 /* Camera Page Styles */
 .container {
   min-height: 100vh;
-  background: radial-gradient(
-      900px 900px at 0% 20%,
-      rgba(132, 204, 22, 0.15),
-      transparent 45%
-    ),
-    radial-gradient(
-      700px 700px at 100% 0%,
-      rgba(250, 204, 21, 0.18),
-      transparent 40%
-    ),
-    linear-gradient(135deg, #ecfccb 0%, #fef9c3 100%);
+  background: #2d5a27; /* Solid green background */
+  display: flex;
+  flex-direction: column;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
 }
 
 .header {
-  background: white;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(
+    135deg,
+    #8fbc8f,
+    #a8c090
+  ); /* Light green to light brown-green */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid #d2b48c; /* Light brown border */
 }
 
 .headerContent {
-  max-width: 64rem;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -32,184 +30,257 @@
 .backLink {
   display: flex;
   align-items: center;
-  color: #4b5563;
-  transition: color 0.3s;
+  color: #2d5a27; /* Dark green */
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .backLink:hover {
-  color: #1f2937;
+  color: #1a3d1a; /* Darker green */
 }
 
 .backIcon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 20px;
+  height: 20px;
   margin-right: 0.5rem;
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  color: #16a34a; /* green-600 */
+  color: #2d5a27; /* Dark green */
+  margin: 0;
   display: flex;
   align-items: center;
+  gap: 0.75rem;
 }
 
 .titleIcon {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  color: #2d5a27; /* Dark green */
 }
 
 .spacer {
-  width: 5rem;
+  width: 120px; /* Match backLink width for centering */
 }
 
 .content {
-  max-width: 64rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  width: 100%;
 }
 
 .cameraContainer {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }
 
 .cameraView {
   position: relative;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 3px solid #d2b48c; /* Light brown border */
 }
 
 .webcam {
   width: 100%;
   height: auto;
-}
-
-.overlayContainer {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.claudiaContainer {
-  position: relative;
-  margin-bottom: 0;
-}
-
-.claudiaImage {
-  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.1));
-  width: 60%;
-  min-width: 400px;
-  max-width: 600px;
-  object-fit: contain;
+  display: block;
 }
 
 .capturedImage {
   width: 100%;
   height: auto;
+  display: block;
+}
+
+.overlayContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+}
+
+.claudiaContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.claudiaImage {
+  max-width: 50%;
+  height: auto;
+  object-fit: contain;
 }
 
 .controls {
-  padding: 1.5rem;
-  background: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
 }
 
 .buttonGroup {
   display: flex;
-  align-items: center;
-  justify-content: center;
   gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.switchButton,
+.captureButton,
+.retakeButton,
+.downloadButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .switchButton {
-  background: #4b5563;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  background: linear-gradient(
+    135deg,
+    #d2b48c,
+    #c4a484
+  ); /* Light brown gradient */
+  color: #2d5a27; /* Dark green text */
 }
 
 .switchButton:hover {
-  background: #374151;
-}
-
-.switchIcon {
-  width: 1rem;
-  height: 1rem;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    135deg,
+    #e6c8a8,
+    #d4b894
+  ); /* Slightly lighter brown */
 }
 
 .captureButton {
-  background: #eab308; /* amber-500 */
+  background: linear-gradient(135deg, #8fbc8f, #7cb342); /* Green gradient */
   color: white;
-  padding: 2rem 1rem;
-  border-radius: 9999px;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.125rem;
-  font-weight: 600;
 }
 
 .captureButton:hover {
-  background: #ca8a04; /* amber-600 */
-}
-
-.captureIcon {
-  width: 1.5rem;
-  height: 1.5rem;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    135deg,
+    #9acd9a,
+    #8bc34a
+  ); /* Slightly lighter green */
 }
 
 .retakeButton {
-  background: #4b5563;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  background: linear-gradient(
+    135deg,
+    #d2b48c,
+    #c4a484
+  ); /* Light brown gradient */
+  color: #2d5a27; /* Dark green text */
 }
 
 .retakeButton:hover {
-  background: #374151;
-}
-
-.retakeIcon {
-  width: 1rem;
-  height: 1rem;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    135deg,
+    #e6c8a8,
+    #d4b894
+  ); /* Slightly lighter brown */
 }
 
 .downloadButton {
-  background: #eab308; /* amber-500 */
+  background: linear-gradient(135deg, #8fbc8f, #7cb342); /* Green gradient */
   color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .downloadButton:hover {
-  background: #ca8a04; /* amber-600 */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    135deg,
+    #9acd9a,
+    #8bc34a
+  ); /* Slightly lighter green */
 }
 
+.switchIcon,
+.captureIcon,
+.retakeIcon,
 .downloadIcon {
-  width: 1rem;
-  height: 1rem;
+  width: 18px;
+  height: 18px;
 }
 
 .helpText {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-top: 1rem;
+  color: #d2b48c; /* Light brown */
+  font-size: 0.9rem;
   text-align: center;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .headerContent {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .spacer {
+    display: none;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .switchButton,
+  .captureButton,
+  .retakeButton,
+  .downloadButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .claudiaImage {
+    max-width: 60%;
+  }
 }

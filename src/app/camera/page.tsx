@@ -4,10 +4,13 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Webcam from "react-webcam";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import styles from "./page.module.css";
 
 export default function CameraPage() {
+  const { t } = useLanguage();
   const webcamRef = useRef<Webcam>(null);
   const claudiaImageRef = useRef<HTMLImageElement>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -168,6 +171,8 @@ export default function CameraPage() {
 
   return (
     <div className={styles.container}>
+      <LanguageSwitcher />
+
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerContent}>
@@ -185,7 +190,7 @@ export default function CameraPage() {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            Back to Home
+            {t("backToHome")}
           </Link>
           <h1 className={styles.title}>
             <svg
@@ -207,7 +212,7 @@ export default function CameraPage() {
                 d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            Take a Pic with Claudia
+            {t("takePicWithClaudia")}
           </h1>
           <div className={styles.spacer}></div> {/* Spacer for centering */}
         </div>
@@ -285,7 +290,7 @@ export default function CameraPage() {
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                       />
                     </svg>
-                    <span>Switch Camera</span>
+                    <span>{t("switchCamera")}</span>
                   </button>
 
                   <button onClick={capture} className={styles.captureButton}>
@@ -308,7 +313,7 @@ export default function CameraPage() {
                         d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
                       />
                     </svg>
-                    <span>Take Photo</span>
+                    <span>{t("takePhoto")}</span>
                   </button>
                 </div>
               ) : (
@@ -327,7 +332,7 @@ export default function CameraPage() {
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                       />
                     </svg>
-                    <span>Retake</span>
+                    <span>{t("retake")}</span>
                   </button>
 
                   <button
@@ -347,15 +352,13 @@ export default function CameraPage() {
                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                       />
                     </svg>
-                    <span>Download</span>
+                    <span>{t("download")}</span>
                   </button>
                 </div>
               )}
 
               <p className={styles.helpText}>
-                {!capturedImage
-                  ? "Position yourself next to Claudia&apos;s photo and take a picture!"
-                  : "Great shot! You can download it or take another one."}
+                {!capturedImage ? t("positionYourself") : t("greatShot")}
               </p>
             </div>
           </div>
