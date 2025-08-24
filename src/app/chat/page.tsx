@@ -24,7 +24,7 @@ export default function ChatPage() {
   const fetchAllStories = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/messages");
+      const response = await fetch("/api/stories");
       if (response.ok) {
         const data = await response.json();
         const allStories: Story[] = data.messages.map(
@@ -216,8 +216,7 @@ export default function ChatPage() {
               </button>
             </div>
             <p className={styles.helpText}>
-              Click the button to hear Claudia&apos;s stories one by one. Each
-              story will appear only once until all have been told!
+              Click the button to hear Claudia's stories!
             </p>
           </div>
         </div>
