@@ -2,11 +2,17 @@ import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
 // MongoDB connection string - use environment variable
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb+srv://Claudia:Claudia1@cluster0.zt4gj7q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = process.env.MONGODB_URI || "";
 
 interface Story {
+  id: string;
+  text: string;
+  language: "en" | "it";
+  createdAt: Date;
+}
+
+interface MongoStory {
+  _id: string;
   id: string;
   text: string;
   language: "en" | "it";
@@ -20,33 +26,19 @@ export async function GET() {
 
     const db = client.db("claudiate");
 
-    // Try to get stories from the stories collection first
-    let stories: Story[] = [];
-    const dbStories = await db.collection("stories").find({}).toArray();
+    // Get stories from the stories collection
+    const dbStories = (await db
+      .collection("stories")
+      .find({})
+      .toArray()) as unknown as MongoStory[];
 
-    if (dbStories.length > 0) {
-      // Convert MongoDB documents to our Story interface
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      stories = dbStories.map((doc: any) => ({
-        id: doc.id || doc._id?.toString() || `story-${Date.now()}`,
-        text: doc.text || "Unknown story",
-        language: doc.language || "it",
-        createdAt: doc.createdAt || new Date(),
-      }));
-    } else {
-      // Fall back to the old claudiate collection
-      const oldStories = await db.collection("claudiate").find({}).toArray();
-      if (oldStories.length > 0) {
-        // Convert old format to new format
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        stories = oldStories.map((story: any, index: number) => ({
-          id: `legacy-${index + 1}`,
-          text: story.claudiate || story.text || "Unknown story",
-          language: "it" as const, // Assume Italian for old stories
-          createdAt: new Date(),
-        }));
-      }
-    }
+    // Convert MongoDB documents to our Story interface
+    const stories: Story[] = dbStories.map((doc) => ({
+      id: doc.id,
+      text: doc.text,
+      language: doc.language,
+      createdAt: doc.createdAt,
+    }));
 
     await client.close();
 

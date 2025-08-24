@@ -16,7 +16,7 @@ export default function LanguageSwitcher() {
       className={styles.languageButton}
       title={language === "en" ? "Cambia in Italiano" : "Switch to English"}
     >
-      {language === "en" ? "🇮🇹" : "🇺🇸"}
+      {language === "en" ? "IT" : "EN"}
     </button>
   );
 }

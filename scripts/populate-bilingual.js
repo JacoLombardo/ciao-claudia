@@ -33,7 +33,7 @@ async function populateDatabase() {
     await collection.deleteMany({});
     console.log("Cleared existing stories");
 
-    // Insert Italian stories
+    // Insert Italian stories with exact structure
     const italianStoriesToInsert = italianStories.map((story, index) => ({
       id: `it-${index + 1}`,
       text: story.text,
@@ -44,7 +44,7 @@ async function populateDatabase() {
     await collection.insertMany(italianStoriesToInsert);
     console.log(`Inserted ${italianStoriesToInsert.length} Italian stories`);
 
-    // Insert English stories
+    // Insert English stories with exact structure
     const englishStoriesToInsert = englishStories.map((story, index) => ({
       id: `en-${index + 1}`,
       text: story.text,
@@ -65,14 +65,14 @@ async function populateDatabase() {
     console.log(`Italian stories: ${italianCount}`);
     console.log(`English stories: ${englishCount}`);
 
-    // Show a few sample stories to verify content
-    console.log("\nSample Italian story:");
+    // Show a few sample stories to verify content and structure
+    console.log("\nSample Italian story structure:");
     const sampleItalian = await collection.findOne({ language: "it" });
-    console.log(sampleItalian?.text);
+    console.log(JSON.stringify(sampleItalian, null, 2));
 
-    console.log("\nSample English story:");
+    console.log("\nSample English story structure:");
     const sampleEnglish = await collection.findOne({ language: "en" });
-    console.log(sampleEnglish?.text);
+    console.log(JSON.stringify(sampleEnglish, null, 2));
   } catch (error) {
     console.error("Error populating database:", error);
   } finally {

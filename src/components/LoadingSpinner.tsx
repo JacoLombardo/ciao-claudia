@@ -25,7 +25,7 @@ export default function LoadingSpinner({ isLoading }: LoadingSpinnerProps) {
             className={styles.image}
           />
         </div>
-        <p className={styles.text}>{t("loadingCamera")}</p>
+        <p className={styles.text}>{t("loading")}</p>
       </div>
     </div>
   );

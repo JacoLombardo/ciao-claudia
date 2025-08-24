@@ -16,7 +16,16 @@ export default function CameraPage() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<"user" | "environment">("user");
   const [isMobile, setIsMobile] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Start with loading false
+  const [isLoading, setIsLoading] = useState(true); // Start with loading true
+
+  // Show loading spinner for 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Responsive video constraints - portrait for mobile, landscape for desktop
   const videoConstraints = {

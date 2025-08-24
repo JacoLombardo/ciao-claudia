@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import styles from "./page.module.css";
 
 interface Story {
@@ -18,10 +19,12 @@ export default function ChatPage() {
   const [displayedStories, setDisplayedStories] = useState<Story[]>([]);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [hasLoadedAll, setHasLoadedAll] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch all stories from the database
   const fetchAllStories = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch("/api/messages");
       if (response.ok) {
         const data = await response.json();
@@ -32,6 +35,8 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error("Error fetching stories:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -71,6 +76,16 @@ export default function ChatPage() {
   const filteredStories = stories.filter(
     (story) => story.language === language
   );
+
+  // Show loading spinner while fetching stories
+  if (isLoading) {
+    return (
+      <div className={styles.container}>
+        <LanguageSwitcher />
+        <LoadingSpinner isLoading={true} />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
