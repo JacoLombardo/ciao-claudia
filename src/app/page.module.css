@@ -1,7 +1,17 @@
 /* Home Page Styles */
 .container {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #fdf2f8, #faf5ff);
+  background: radial-gradient(
+      900px 900px at 0% 20%,
+      rgba(34, 197, 94, 0.2),
+      transparent 45%
+    ),
+    radial-gradient(
+      700px 700px at 100% 0%,
+      rgba(214, 184, 138, 0.22),
+      transparent 40%
+    ),
+    linear-gradient(135deg, #e6f4ea 0%, #f5e6cc 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,13 +31,13 @@
 .greeting {
   font-size: 3.75rem;
   font-weight: 700;
-  color: #6b21a8;
+  color: #166534; /* green-800 */
   margin-bottom: 1rem;
 }
 
 .subtitle {
   font-size: 1.25rem;
-  color: #4b5563;
+  color: #3f3f46;
   max-width: 28rem;
   margin: 0 auto;
 }
@@ -56,11 +66,11 @@
 }
 
 .askCard:hover {
-  border-color: #e9d5ff;
+  border-color: #d9f99d; /* lime-200 */
 }
 
 .cameraCard:hover {
-  border-color: #fce7f3;
+  border-color: #fde68a; /* amber-200 */
 }
 
 .iconContainer {
@@ -75,19 +85,19 @@
 }
 
 .askIconContainer {
-  background-color: #f3e8ff;
+  background-color: #ecfccb; /* lime-100 */
 }
 
 .group:hover .askIconContainer {
-  background-color: #e9d5ff;
+  background-color: #d9f99d; /* lime-200 */
 }
 
 .cameraIconContainer {
-  background-color: #fce7f3;
+  background-color: #fef3c7; /* amber-100 */
 }
 
 .group:hover .cameraIconContainer {
-  background-color: #fbcfe8;
+  background-color: #fde68a; /* amber-200 */
 }
 
 .icon {
@@ -96,11 +106,11 @@
 }
 
 .askIcon {
-  color: #9333ea;
+  color: #16a34a; /* green-600 */
 }
 
 .cameraIcon {
-  color: #ec4899;
+  color: #ca8a04; /* amber-600 */
 }
 
 .optionTitle {
@@ -122,19 +132,19 @@
 }
 
 .askActionText {
-  color: #9333ea;
+  color: #16a34a;
 }
 
 .group:hover .askActionText {
-  color: #7c3aed;
+  color: #15803d; /* green-700 */
 }
 
 .cameraActionText {
-  color: #ec4899;
+  color: #ca8a04;
 }
 
 .group:hover .cameraActionText {
-  color: #db2777;
+  color: #a16207; /* amber-700 */
 }
 
 .arrowIcon {
