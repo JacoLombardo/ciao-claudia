@@ -246,14 +246,18 @@ export default function CameraPage() {
   };
 
   const toggleCamera = () => {
-    setFacingMode((prev) => (prev === "user" ? "environment" : "user"));
+    setFacingMode((prev) => {
+      const newMode = prev === "user" ? "environment" : "user";
+      console.log(`Switching camera from ${prev} to ${newMode}`);
+      return newMode;
+    });
   };
 
   return (
     <div className={styles.container}>
       <LanguageSwitcher />
 
-      {/* Header */}
+      {/* Header - positioned above viewport */}
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <Link href="/" className={styles.backLink}>
