@@ -24,6 +24,8 @@ export default function CameraPage() {
   const [isMobile, setIsMobile] = useState(false);
   const [isPortrait, setIsPortrait] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Start with loading true
+  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+  const lastScrollY = useRef(0);
 
   // Show loading spinner for 3 seconds
   useEffect(() => {
@@ -32,6 +34,24 @@ export default function CameraPage() {
     }, 3000);
 
     return () => clearTimeout(timer);
+  }, []);
+
+  // Handle scroll to show/hide header
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY < lastScrollY.current && currentScrollY > 50) {
+        // Scrolling up and not at the very top
+        setIsHeaderVisible(true);
+      } else if (currentScrollY > lastScrollY.current || currentScrollY <= 50) {
+        // Scrolling down or at the top
+        setIsHeaderVisible(false);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Choose constraints once and lock to avoid flapping
@@ -258,7 +278,9 @@ export default function CameraPage() {
       <LanguageSwitcher />
 
       {/* Header - positioned above viewport */}
-      <div className={styles.header}>
+      <div
+        className={`${styles.header} ${isHeaderVisible ? styles.visible : ""}`}
+      >
         <div className={styles.headerContent}>
           <Link href="/" className={styles.backLink}>
             <svg
@@ -415,7 +437,7 @@ export default function CameraPage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
                     />
                   </svg>
                 </button>
