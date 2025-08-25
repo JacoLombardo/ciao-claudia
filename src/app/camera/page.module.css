@@ -90,16 +90,17 @@
 .cameraView {
   position: relative;
   width: 100%;
+  height: 100%;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   border: 3px solid #d2b48c; /* Light brown border */
 }
 
-/* Mobile-sized camera container: 90% width, 80% viewport height */
+/* Mobile-sized camera container: 70% width, 70% viewport height */
 .cameraViewMobile {
-  width: 90vw;
-  height: 80vh;
+  width: 70vw;
+  height: 70vh;
   max-width: none;
 }
 
@@ -190,10 +191,10 @@
   ); /* Slightly lighter brown */
 }
 
-/* Make capture button 20% bigger */
+/* Make capture button 50% bigger than current size */
 .captureButton {
-  width: 48px;
-  height: 48px;
+  width: 72px;
+  height: 72px;
   background: linear-gradient(135deg, #8fbc8f, #7cb342);
   color: white;
 }
@@ -327,10 +328,10 @@
     height: 36px;
   }
 
-  /* 20% bigger on mobile too */
+  /* 50% bigger on mobile too */
   .captureButton {
-    width: 44px;
-    height: 44px;
+    width: 66px;
+    height: 66px;
   }
 
   .switchIcon,
