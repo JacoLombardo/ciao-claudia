@@ -97,10 +97,10 @@
   border: 3px solid #d2b48c; /* Light brown border */
 }
 
-/* Mobile-sized camera container: 70% width, 70% viewport height */
+/* Mobile-sized camera container: 90% width, 75% viewport height */
 .cameraViewMobile {
-  width: 70vw;
-  height: 70vh;
+  width: 90vw;
+  height: 75vh;
   max-width: none;
 }
 
@@ -137,6 +137,11 @@
   max-width: 50%;
   height: auto;
   object-fit: contain;
+}
+
+/* Mobile silhouette: 100% bigger */
+.cameraViewMobile .claudiaImage {
+  max-width: 100%;
 }
 
 .controls {
