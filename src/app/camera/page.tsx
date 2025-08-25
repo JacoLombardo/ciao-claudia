@@ -17,6 +17,8 @@ export default function CameraPage() {
   const lastIsPortraitRef = useRef<boolean | null>(null);
   const debounceTimerRef = useRef<number | null>(null);
   const initializedAtRef = useRef<number | null>(null);
+  const [lockedConstraints, setLockedConstraints] =
+    useState<MediaTrackConstraints | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<"user" | "environment">("user");
   const [isMobile, setIsMobile] = useState(false);
@@ -32,11 +34,12 @@ export default function CameraPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Responsive video constraints based on container orientation
-  const videoConstraints = {
-    width: isPortrait ? 720 : 1280,
-    height: isPortrait ? 1280 : 720,
-    aspectRatio: isPortrait ? 3 / 4 : 16 / 9,
+  // Choose constraints once and lock to avoid flapping
+  const useMobileLayout = isMobile;
+  const videoConstraints = lockedConstraints || {
+    width: useMobileLayout ? 1280 : isPortrait ? 720 : 1280,
+    height: useMobileLayout ? 720 : isPortrait ? 1280 : 720,
+    aspectRatio: useMobileLayout ? 16 / 9 : isPortrait ? 3 / 4 : 16 / 9,
     facingMode: facingMode,
   };
 
@@ -60,6 +63,17 @@ export default function CameraPage() {
           setIsPortrait(nextIsPortrait);
         }
         setIsMobile(rect.width < 768);
+
+        // Lock constraints on first apply only
+        if (!lockedConstraints) {
+          const mobile = rect.width < 768;
+          const initialConstraints: MediaTrackConstraints = mobile
+            ? { width: 1280, height: 720, aspectRatio: 16 / 9, facingMode }
+            : nextIsPortrait
+            ? { width: 720, height: 1280, aspectRatio: 3 / 4, facingMode }
+            : { width: 1280, height: 720, aspectRatio: 16 / 9, facingMode };
+          setLockedConstraints(initialConstraints);
+        }
       };
 
       if (initializedAtRef.current === null) {
@@ -262,16 +276,22 @@ export default function CameraPage() {
       <div className={styles.content}>
         <div className={styles.cameraContainer} ref={containerRef}>
           {/* Camera View */}
-          <div className={styles.cameraView}>
+          <div
+            className={`${styles.cameraView} ${
+              useMobileLayout ? styles.cameraViewMobile : ""
+            }`}
+          >
             {!capturedImage ? (
               <div className={styles.cameraView}>
                 <Webcam
-                  key={`${facingMode}-${isPortrait ? "portrait" : "landscape"}`}
+                  key={`${facingMode}`}
                   ref={webcamRef}
                   audio={false}
                   screenshotFormat="image/jpeg"
                   videoConstraints={videoConstraints}
                   className={styles.webcam}
+                  mirrored={facingMode === "user"}
+                  playsInline
                   onUserMedia={handleUserMedia}
                   onUserMediaError={handleUserMediaError}
                 />

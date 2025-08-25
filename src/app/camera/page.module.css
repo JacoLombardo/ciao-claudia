@@ -96,10 +96,18 @@
   border: 3px solid #d2b48c; /* Light brown border */
 }
 
+/* Mobile-sized camera container: 90% width, 80% viewport height */
+.cameraViewMobile {
+  width: 90vw;
+  height: 80vh;
+  max-width: none;
+}
+
 .webcam {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
+  object-fit: cover;
 }
 
 .capturedImage {
