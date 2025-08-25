@@ -149,16 +149,18 @@
 .captureButton,
 .retakeButton,
 .downloadButton {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 1.5rem;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
   border: none;
-  border-radius: 50px;
+  border-radius: 9999px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.9rem;
+  font-size: 0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
@@ -234,8 +236,8 @@
 .captureIcon,
 .retakeIcon,
 .downloadIcon {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
 }
 
 .helpText {
@@ -267,17 +269,17 @@
   }
 
   .buttonGroup {
-    flex-direction: column;
-    width: 100%;
-    max-width: 300px;
+    flex-direction: row;
+    width: auto;
+    max-width: none;
   }
 
   .switchButton,
   .captureButton,
   .retakeButton,
   .downloadButton {
-    width: 100%;
-    justify-content: center;
+    width: 44px;
+    height: 44px;
   }
 
   .claudiaImage {

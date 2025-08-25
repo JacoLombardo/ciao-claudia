@@ -54,16 +54,18 @@ export default function CameraPage() {
     const listener = () => updateLayout();
     if (mql && mql.addEventListener) {
       mql.addEventListener("change", listener);
-    } else if (mql && (mql as any).addListener) {
-      (mql as any).addListener(listener);
+    } else if (mql && "addListener" in mql) {
+      // Fallback for older browsers
+      mql.addListener(listener);
     }
 
     return () => {
       window.removeEventListener("resize", updateLayout);
       if (mql && mql.removeEventListener) {
         mql.removeEventListener("change", listener);
-      } else if (mql && (mql as any).removeListener) {
-        (mql as any).removeListener(listener);
+      } else if (mql && "removeListener" in mql) {
+        // Fallback for older browsers
+        mql.removeListener(listener);
       }
     };
   }, []);
@@ -307,7 +309,6 @@ export default function CameraPage() {
                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
                   </svg>
-                  <span>{t("switchCamera")}</span>
                 </button>
 
                 <button onClick={capture} className={styles.captureButton}>
@@ -330,7 +331,6 @@ export default function CameraPage() {
                       d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  <span>{t("takePhoto")}</span>
                 </button>
               </div>
             ) : (
@@ -349,7 +349,6 @@ export default function CameraPage() {
                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
                   </svg>
-                  <span>{t("retake")}</span>
                 </button>
 
                 <button
@@ -369,7 +368,6 @@ export default function CameraPage() {
                       d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                     />
                   </svg>
-                  <span>{t("download")}</span>
                 </button>
               </div>
             )}
