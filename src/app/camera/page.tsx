@@ -16,6 +16,7 @@ export default function CameraPage() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<"user" | "environment">("user");
   const [isMobile, setIsMobile] = useState(false);
+  const [isPortrait, setIsPortrait] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Start with loading true
 
   // Show loading spinner for 3 seconds
@@ -27,23 +28,44 @@ export default function CameraPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Responsive video constraints - portrait for mobile, landscape for desktop
+  // Responsive video constraints based on orientation
   const videoConstraints = {
-    width: isMobile ? 720 : 1280, // Smaller width for mobile
-    height: isMobile ? 1280 : 720, // Taller height for mobile
+    width: isPortrait ? 720 : 1280,
+    height: isPortrait ? 1280 : 720,
     facingMode: facingMode,
   };
 
-  // Check if we're on mobile and update on resize
+  // Detect mobile and orientation; update on resize/orientation changes
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+    const updateLayout = () => {
+      const isNarrow = window.innerWidth < 768;
+      setIsMobile(isNarrow);
+      const portrait =
+        window.matchMedia &&
+        window.matchMedia("(orientation: portrait)").matches;
+      setIsPortrait(
+        portrait || (isNarrow && window.innerHeight > window.innerWidth)
+      );
     };
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
+    updateLayout();
+    window.addEventListener("resize", updateLayout);
+    const mql = window.matchMedia("(orientation: portrait)");
+    const listener = () => updateLayout();
+    if (mql && mql.addEventListener) {
+      mql.addEventListener("change", listener);
+    } else if (mql && (mql as any).addListener) {
+      (mql as any).addListener(listener);
+    }
 
-    return () => window.removeEventListener("resize", checkMobile);
+    return () => {
+      window.removeEventListener("resize", updateLayout);
+      if (mql && mql.removeEventListener) {
+        mql.removeEventListener("change", listener);
+      } else if (mql && (mql as any).removeListener) {
+        (mql as any).removeListener(listener);
+      }
+    };
   }, []);
 
   // Debug loading state
@@ -54,17 +76,7 @@ export default function CameraPage() {
   // Handle camera loading state
   const handleUserMedia = useCallback(() => {
     console.log("Camera stream started");
-    // Wait for the video element to actually show content
-    const checkVideoReady = () => {
-      const video = webcamRef.current?.video;
-      if (video && video.readyState >= 2) {
-        console.log("Video ready, turning off loading");
-        setIsLoading(false);
-      } else {
-        setTimeout(checkVideoReady, 100);
-      }
-    };
-    checkVideoReady();
+    // Keep spinner timing independent so camera can mount behind it
   }, []);
 
   const handleUserMediaError = useCallback(() => {
@@ -229,150 +241,145 @@ export default function CameraPage() {
 
       {/* Content */}
       <LoadingSpinner isLoading={isLoading} />
-      {!isLoading && (
-        // Camera interface
-        <div className={styles.content}>
-          <div className={styles.cameraContainer}>
-            {/* Camera View */}
-            <div className={styles.cameraView}>
-              {!capturedImage ? (
-                <div className={styles.cameraView}>
-                  <Webcam
-                    ref={webcamRef}
-                    audio={false}
-                    screenshotFormat="image/jpeg"
-                    videoConstraints={videoConstraints}
-                    className={styles.webcam}
-                    onUserMedia={handleUserMedia}
-                    onUserMediaError={handleUserMediaError}
-                    onLoad={() => console.log("Webcam onLoad fired")}
-                  />
+      {/* Camera interface renders immediately; spinner overlays it */}
+      <div className={styles.content}>
+        <div className={styles.cameraContainer}>
+          {/* Camera View */}
+          <div className={styles.cameraView}>
+            {!capturedImage ? (
+              <div className={styles.cameraView}>
+                <Webcam
+                  key={`${facingMode}-${isPortrait ? "portrait" : "landscape"}`}
+                  ref={webcamRef}
+                  audio={false}
+                  screenshotFormat="image/jpeg"
+                  videoConstraints={videoConstraints}
+                  className={styles.webcam}
+                  onUserMedia={handleUserMedia}
+                  onUserMediaError={handleUserMediaError}
+                />
 
-                  {/* Claudia's Photo Overlay for preview */}
-                  <div className={styles.overlayContainer}>
-                    <div
-                      className={styles.claudiaContainer}
-                      style={{ marginLeft: "35%" }}
-                    >
-                      <Image
-                        ref={claudiaImageRef}
-                        src="/claudia.png"
-                        alt="Claudia"
-                        width={500}
-                        height={750}
-                        className={styles.claudiaImage}
-                      />
-                    </div>
+                {/* Claudia's Photo Overlay for preview */}
+                <div className={styles.overlayContainer}>
+                  <div
+                    className={styles.claudiaContainer}
+                    style={{ marginLeft: "35%" }}
+                  >
+                    <Image
+                      ref={claudiaImageRef}
+                      src="/claudia.png"
+                      alt="Claudia"
+                      width={500}
+                      height={750}
+                      className={styles.claudiaImage}
+                    />
                   </div>
                 </div>
-              ) : (
-                <div className={styles.cameraView}>
-                  <Image
-                    src={capturedImage}
-                    alt="Captured photo with Claudia"
-                    width={1280}
-                    height={720}
-                    className={styles.capturedImage}
-                  />
-                </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className={styles.cameraView}>
+                <Image
+                  src={capturedImage}
+                  alt="Captured photo with Claudia"
+                  width={1280}
+                  height={720}
+                  className={styles.capturedImage}
+                />
+              </div>
+            )}
+          </div>
 
-            {/* Controls */}
-            <div className={styles.controls}>
-              {!capturedImage ? (
-                <div className={styles.buttonGroup}>
-                  <button
-                    onClick={toggleCamera}
-                    className={styles.switchButton}
+          {/* Controls */}
+          <div className={styles.controls}>
+            {!capturedImage ? (
+              <div className={styles.buttonGroup}>
+                <button onClick={toggleCamera} className={styles.switchButton}>
+                  <svg
+                    className={styles.switchIcon}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      className={styles.switchIcon}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                      />
-                    </svg>
-                    <span>{t("switchCamera")}</span>
-                  </button>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                  <span>{t("switchCamera")}</span>
+                </button>
 
-                  <button onClick={capture} className={styles.captureButton}>
-                    <svg
-                      className={styles.captureIcon}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                    <span>{t("takePhoto")}</span>
-                  </button>
-                </div>
-              ) : (
-                <div className={styles.buttonGroup}>
-                  <button onClick={retake} className={styles.retakeButton}>
-                    <svg
-                      className={styles.retakeIcon}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                      />
-                    </svg>
-                    <span>{t("retake")}</span>
-                  </button>
-
-                  <button
-                    onClick={downloadImage}
-                    className={styles.downloadButton}
+                <button onClick={capture} className={styles.captureButton}>
+                  <svg
+                    className={styles.captureIcon}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      className={styles.downloadIcon}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                      />
-                    </svg>
-                    <span>{t("download")}</span>
-                  </button>
-                </div>
-              )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  <span>{t("takePhoto")}</span>
+                </button>
+              </div>
+            ) : (
+              <div className={styles.buttonGroup}>
+                <button onClick={retake} className={styles.retakeButton}>
+                  <svg
+                    className={styles.retakeIcon}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                  <span>{t("retake")}</span>
+                </button>
 
-              <p className={styles.helpText}>
-                {!capturedImage ? t("positionYourself") : t("greatShot")}
-              </p>
-            </div>
+                <button
+                  onClick={downloadImage}
+                  className={styles.downloadButton}
+                >
+                  <svg
+                    className={styles.downloadIcon}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    />
+                  </svg>
+                  <span>{t("download")}</span>
+                </button>
+              </div>
+            )}
+
+            <p className={styles.helpText}>
+              {!capturedImage ? t("positionYourself") : t("greatShot")}
+            </p>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -27,10 +27,10 @@ export async function GET() {
     const db = client.db("claudiate");
 
     // Get stories from the stories collection
-    const dbStories = (await db
-      .collection("stories")
+    const dbStories = await db
+      .collection<MongoStory>("stories")
       .find({})
-      .toArray()) as unknown as MongoStory[];
+      .toArray();
 
     // Convert MongoDB documents to our Story interface
     const stories: Story[] = dbStories.map((doc) => ({
