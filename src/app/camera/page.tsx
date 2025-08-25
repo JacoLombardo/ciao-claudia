@@ -14,6 +14,9 @@ export default function CameraPage() {
   const webcamRef = useRef<Webcam>(null);
   const claudiaImageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const lastIsPortraitRef = useRef<boolean | null>(null);
+  const debounceTimerRef = useRef<number | null>(null);
+  const initializedAtRef = useRef<number | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<"user" | "environment">("user");
   const [isMobile, setIsMobile] = useState(false);
@@ -44,17 +47,40 @@ export default function CameraPage() {
 
     const updateFromContainer = () => {
       const rect = element.getBoundingClientRect();
-      const portrait = rect.height >= rect.width;
-      setIsPortrait(portrait);
-      setIsMobile(rect.width < 768);
+      const ratio = rect.height / Math.max(1, rect.width);
+      // Hysteresis to avoid flapping around ~1.0
+      let nextIsPortrait = lastIsPortraitRef.current ?? ratio >= 1.0;
+      if (ratio > 1.05) nextIsPortrait = true;
+      if (ratio < 0.95) nextIsPortrait = false;
+
+      // Debounce rapid updates
+      const apply = () => {
+        if (lastIsPortraitRef.current !== nextIsPortrait) {
+          lastIsPortraitRef.current = nextIsPortrait;
+          setIsPortrait(nextIsPortrait);
+        }
+        setIsMobile(rect.width < 768);
+      };
+
+      if (initializedAtRef.current === null) {
+        initializedAtRef.current = Date.now();
+        apply();
+      } else {
+        if (debounceTimerRef.current)
+          window.clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = window.setTimeout(apply, 120);
+      }
     };
 
+    // Initial measure
     updateFromContainer();
 
     const ro = new ResizeObserver(() => updateFromContainer());
     ro.observe(element);
 
     return () => {
+      if (debounceTimerRef.current)
+        window.clearTimeout(debounceTimerRef.current);
       ro.disconnect();
     };
   }, []);

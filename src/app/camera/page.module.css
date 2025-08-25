@@ -272,7 +272,8 @@
   align-items: center;
   justify-items: center;
   width: 100%;
-  gap: 0.5rem;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .secondaryRow > :first-child {
