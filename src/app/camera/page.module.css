@@ -84,7 +84,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.12rem;
 }
 
 .cameraView {
@@ -139,9 +139,9 @@
   object-fit: contain;
 }
 
-/* Mobile silhouette: 100% bigger */
+/* Mobile silhouette: 50% bigger */
 .cameraViewMobile .claudiaImage {
-  max-width: 100%;
+  max-width: 75%;
 }
 
 .controls {
