@@ -210,10 +210,38 @@ export default function CameraPage() {
 
   const downloadImage = () => {
     if (capturedImage) {
-      const link = document.createElement("a");
-      link.href = capturedImage;
-      link.download = `claudia-photo-${Date.now()}.jpg`;
-      link.click();
+      // Use Web Share API on mobile for better quality and camera roll access
+      if (navigator.share && isMobile) {
+        // Convert data URL to blob for better sharing
+        fetch(capturedImage)
+          .then((res) => res.blob())
+          .then((blob) => {
+            const file = new File([blob], `claudia-photo-${Date.now()}.jpg`, {
+              type: "image/jpeg",
+            });
+
+            navigator
+              .share({
+                files: [file],
+                title: "Photo with Claudia",
+                text: "Check out this photo I took with Claudia!",
+              })
+              .catch((err) => {
+                console.log("Share failed, falling back to download:", err);
+                // Fallback to regular download
+                const link = document.createElement("a");
+                link.href = capturedImage;
+                link.download = `claudia-photo-${Date.now()}.jpg`;
+                link.click();
+              });
+          });
+      } else {
+        // Fallback for desktop or when Web Share API not available
+        const link = document.createElement("a");
+        link.href = capturedImage;
+        link.download = `claudia-photo-${Date.now()}.jpg`;
+        link.click();
+      }
     }
   };
 
