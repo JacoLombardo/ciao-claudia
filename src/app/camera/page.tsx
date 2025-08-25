@@ -13,6 +13,7 @@ export default function CameraPage() {
   const { t } = useLanguage();
   const webcamRef = useRef<Webcam>(null);
   const claudiaImageRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<"user" | "environment">("user");
   const [isMobile, setIsMobile] = useState(false);
@@ -28,45 +29,33 @@ export default function CameraPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Responsive video constraints based on orientation
+  // Responsive video constraints based on container orientation
   const videoConstraints = {
     width: isPortrait ? 720 : 1280,
     height: isPortrait ? 1280 : 720,
+    aspectRatio: isPortrait ? 3 / 4 : 16 / 9,
     facingMode: facingMode,
   };
 
-  // Detect mobile and orientation; update on resize/orientation changes
+  // Container-based orientation detection (works on mobile and resize)
   useEffect(() => {
-    const updateLayout = () => {
-      const isNarrow = window.innerWidth < 768;
-      setIsMobile(isNarrow);
-      const portrait =
-        window.matchMedia &&
-        window.matchMedia("(orientation: portrait)").matches;
-      setIsPortrait(
-        portrait || (isNarrow && window.innerHeight > window.innerWidth)
-      );
+    const element = containerRef.current;
+    if (!element) return;
+
+    const updateFromContainer = () => {
+      const rect = element.getBoundingClientRect();
+      const portrait = rect.height >= rect.width;
+      setIsPortrait(portrait);
+      setIsMobile(rect.width < 768);
     };
 
-    updateLayout();
-    window.addEventListener("resize", updateLayout);
-    const mql = window.matchMedia("(orientation: portrait)");
-    const listener = () => updateLayout();
-    if (mql && mql.addEventListener) {
-      mql.addEventListener("change", listener);
-    } else if (mql && "addListener" in mql) {
-      // Fallback for older browsers
-      mql.addListener(listener);
-    }
+    updateFromContainer();
+
+    const ro = new ResizeObserver(() => updateFromContainer());
+    ro.observe(element);
 
     return () => {
-      window.removeEventListener("resize", updateLayout);
-      if (mql && mql.removeEventListener) {
-        mql.removeEventListener("change", listener);
-      } else if (mql && "removeListener" in mql) {
-        // Fallback for older browsers
-        mql.removeListener(listener);
-      }
+      ro.disconnect();
     };
   }, []);
 
@@ -245,7 +234,7 @@ export default function CameraPage() {
       <LoadingSpinner isLoading={isLoading} />
       {/* Camera interface renders immediately; spinner overlays it */}
       <div className={styles.content}>
-        <div className={styles.cameraContainer}>
+        <div className={styles.cameraContainer} ref={containerRef}>
           {/* Camera View */}
           <div className={styles.cameraView}>
             {!capturedImage ? (
@@ -294,7 +283,7 @@ export default function CameraPage() {
           {/* Controls */}
           <div className={styles.controls}>
             {!capturedImage ? (
-              <div className={styles.buttonGroup}>
+              <div className={styles.buttonRow}>
                 <button onClick={toggleCamera} className={styles.switchButton}>
                   <svg
                     className={styles.switchIcon}
@@ -332,9 +321,11 @@ export default function CameraPage() {
                     />
                   </svg>
                 </button>
+
+                <button aria-hidden="true" className={styles.spacerButton} />
               </div>
             ) : (
-              <div className={styles.buttonGroup}>
+              <div className={styles.secondaryRow}>
                 <button onClick={retake} className={styles.retakeButton}>
                   <svg
                     className={styles.retakeIcon}
@@ -371,10 +362,6 @@ export default function CameraPage() {
                 </button>
               </div>
             )}
-
-            <p className={styles.helpText}>
-              {!capturedImage ? t("positionYourself") : t("greatShot")}
-            </p>
           </div>
         </div>
       </div>
