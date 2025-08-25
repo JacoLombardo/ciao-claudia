@@ -139,9 +139,12 @@
   object-fit: contain;
 }
 
-/* Mobile silhouette: 50% bigger */
+/* Mobile silhouette: 70% of screen width with proportional height */
 .cameraViewMobile .claudiaImage {
-  max-width: 75%;
+  width: 70vw;
+  height: auto;
+  max-width: none;
+  margin-left: 10% !important;
 }
 
 .controls {
