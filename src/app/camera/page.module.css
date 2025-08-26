@@ -93,12 +93,31 @@
 /* Mobile: Hide header initially, show on scroll */
 @media (max-width: 768px) {
   .header {
+    /* Fixed position but hidden initially */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
     transform: translateY(-100%);
     transition: transform 0.3s ease;
   }
 
   .header.visible {
     transform: translateY(0);
+  }
+
+  /* Mobile button sizes */
+  .switchButton,
+  .retakeButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .captureButton,
+  .downloadButton {
+    width: 66px;
+    height: 66px;
   }
 }
 
@@ -387,17 +406,5 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-  }
-
-  .switchButton,
-  .retakeButton {
-    width: 66px;
-    height: 66px;
-  }
-
-  .captureButton,
-  .downloadButton {
-    width: 66px;
-    height: 66px;
   }
 }
