@@ -33,8 +33,8 @@ export default function CameraPage() {
     const checkScreenSize = () => {
       const isMobileScreen = window.innerWidth < 768;
       isMobileRef.current = isMobileScreen;
-      // On desktop, always show header. On mobile, start hidden.
-      setIsHeaderVisible(isMobileScreen ? false : true);
+      // Header is always visible on the page
+      setIsHeaderVisible(true);
     };
 
     checkScreenSize();
@@ -49,33 +49,6 @@ export default function CameraPage() {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, []);
-
-  // Handle scroll to show/hide header
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      // Only apply scroll behavior on mobile
-      if (isMobileRef.current) {
-        if (currentScrollY < lastScrollY.current && currentScrollY > 50) {
-          // Scrolling up and not at the very top
-          setIsHeaderVisible(true);
-        } else if (
-          currentScrollY > lastScrollY.current ||
-          currentScrollY <= 50
-        ) {
-          // Scrolling down or at the top
-          setIsHeaderVisible(false);
-        }
-      } else {
-        // On desktop, always show header
-        setIsHeaderVisible(true);
-      }
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Choose constraints once and lock to avoid flapping
@@ -314,9 +287,7 @@ export default function CameraPage() {
       <LanguageSwitcher />
 
       {/* Header - positioned above viewport */}
-      <div
-        className={`${styles.header} ${isHeaderVisible ? styles.visible : ""}`}
-      >
+      <div className={styles.header}>
         <div className={styles.headerContent}>
           <Link href="/" className={styles.backLink}>
             <svg
