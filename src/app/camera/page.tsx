@@ -26,12 +26,26 @@ export default function CameraPage() {
   const [isLoading, setIsLoading] = useState(true); // Start with loading true
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
   const lastScrollY = useRef(0);
+  const isMobileRef = useRef(false);
 
-  // Show loading spinner for 3 seconds
+  // Set initial header visibility based on screen size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const isMobileScreen = window.innerWidth < 768;
+      isMobileRef.current = isMobileScreen;
+      setIsHeaderVisible(!isMobileScreen);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  // Show loading spinner for 2 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -40,28 +54,50 @@ export default function CameraPage() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY < lastScrollY.current && currentScrollY > 50) {
-        // Scrolling up and not at the very top
+      // Only apply scroll behavior on mobile
+      if (isMobileRef.current) {
+        if (currentScrollY < lastScrollY.current && currentScrollY > 50) {
+          // Scrolling up and not at the very top
+          setIsHeaderVisible(true);
+        } else if (
+          currentScrollY > lastScrollY.current ||
+          currentScrollY <= 50
+        ) {
+          // Scrolling down or at the top
+          setIsHeaderVisible(false);
+        }
+      } else {
+        // On desktop, always show header
         setIsHeaderVisible(true);
-      } else if (currentScrollY > lastScrollY.current || currentScrollY <= 50) {
-        // Scrolling down or at the top
-        setIsHeaderVisible(false);
       }
       lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Choose constraints once and lock to avoid flapping
   const useMobileLayout = isMobile;
-  const videoConstraints = lockedConstraints || {
-    width: useMobileLayout ? 1280 : isPortrait ? 720 : 1280,
-    height: useMobileLayout ? 720 : isPortrait ? 1280 : 720,
-    aspectRatio: useMobileLayout ? 16 / 9 : isPortrait ? 3 / 4 : 16 / 9,
-    facingMode: facingMode,
+  const videoConstraints = {
+    ...(lockedConstraints || {
+      width: useMobileLayout ? 1280 : isPortrait ? 720 : 1280,
+      height: useMobileLayout ? 720 : isPortrait ? 1280 : 720,
+      aspectRatio: useMobileLayout ? 16 / 9 : isPortrait ? 3 / 4 : 16 / 9,
+    }),
+    facingMode: facingMode, // Always use current facingMode
   };
+
+  // Update locked constraints when facingMode changes
+  useEffect(() => {
+    if (lockedConstraints) {
+      setLockedConstraints({
+        ...lockedConstraints,
+        facingMode: facingMode,
+      });
+    }
+  }, [facingMode]); // Remove lockedConstraints from dependencies
 
   // Container-based orientation detection (works on mobile and resize)
   useEffect(() => {

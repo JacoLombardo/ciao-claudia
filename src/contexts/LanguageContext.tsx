@@ -19,6 +19,7 @@ const translations = {
   en: {
     // Landing page
     greeting: "Hello Claudia! 👋",
+    subtitle: "Choose what you'd like to do with Claudia today!",
     askClaudia: "Ask Claudia",
     askClaudiaDesc: "Get a random story from Claudia about her day",
     takePic: "Take a Pic with Claudia",
@@ -48,6 +49,7 @@ const translations = {
   it: {
     // Landing page
     greeting: "Ciao Claudia! 👋",
+    subtitle: "Scegli cosa vuoi fare con Claudia oggi!",
     askClaudia: "Chiedi a Claudia",
     askClaudiaDesc: "Ricevi una storia casuale da Claudia sulla sua giornata",
     takePic: "Fai una Foto con Claudia",

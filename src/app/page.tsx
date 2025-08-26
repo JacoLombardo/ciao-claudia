@@ -15,9 +15,7 @@ export default function HomePage() {
       {/* Header */}
       <div className={styles.header}>
         <h1 className={styles.title}>{t("greeting")}</h1>
-        <p className={styles.subtitle}>
-          Choose what you&apos;d like to do with Claudia today!
-        </p>
+        <p className={styles.subtitle}>{t("subtitle")}</p>
       </div>
 
       {/* Cards Container */}
@@ -35,7 +33,6 @@ export default function HomePage() {
             </svg>
           </div>
           <h2 className={styles.cardTitle}>{t("askClaudia")}</h2>
-          <p className={styles.cardDescription}>{t("askClaudiaDesc")}</p>
         </Link>
 
         {/* Take a Pic with Claudia Card */}
@@ -57,7 +54,6 @@ export default function HomePage() {
             </svg>
           </div>
           <h2 className={styles.cardTitle}>{t("takePic")}</h2>
-          <p className={styles.cardDescription}>{t("takePicDesc")}</p>
         </Link>
       </div>
 

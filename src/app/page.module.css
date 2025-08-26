@@ -33,9 +33,9 @@
 
 .cardsContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 2rem;
-  max-width: 800px;
+  max-width: 500px;
   width: 100%;
 }
 
@@ -45,8 +45,8 @@
     #8fbc8f,
     #a8c090
   ); /* Light green to light brown-green */
-  border-radius: 20px;
-  padding: 2.5rem;
+  border-radius: 80px;
+  padding: 1.5rem;
   text-align: center;
   text-decoration: none;
   color: #2d5a27; /* Dark green text */
@@ -66,23 +66,16 @@
 }
 
 .cardTitle {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
   color: #2d5a27; /* Dark green */
 }
 
-.cardDescription {
-  font-size: 1rem;
-  color: #4a5d23; /* Darker green-brown */
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
 .cardIcon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 1rem;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 0.5rem;
   color: #2d5a27; /* Dark green */
 }
 
@@ -107,9 +100,20 @@
   .cardsContainer {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+    max-width: 300px;
   }
 
   .card {
-    padding: 2rem;
+    padding: 1.25rem;
+    border-radius: 60px;
+  }
+
+  .cardTitle {
+    font-size: 0.9rem;
+  }
+
+  .cardIcon {
+    width: 28px;
+    height: 28px;
   }
 }
