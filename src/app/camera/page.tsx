@@ -42,6 +42,25 @@ export default function CameraPage() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  // Scroll to camera position on mobile page load
+  useEffect(() => {
+    const scrollToCamera = () => {
+      if (isMobileRef.current) {
+        // Wait a bit for the page to load, then scroll to camera
+        setTimeout(() => {
+          const cameraElement = document.querySelector(
+            "[data-camera-container]"
+          );
+          if (cameraElement) {
+            cameraElement.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100);
+      }
+    };
+
+    scrollToCamera();
+  }, []);
+
   // Show loading spinner for 2 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -335,7 +354,11 @@ export default function CameraPage() {
       <LoadingSpinner isLoading={isLoading} />
       {/* Camera interface renders immediately; spinner overlays it */}
       <div className={styles.content}>
-        <div className={styles.cameraContainer} ref={containerRef}>
+        <div
+          className={styles.cameraContainer}
+          ref={containerRef}
+          data-camera-container
+        >
           {/* Camera View */}
           <div
             className={`${styles.cameraView} ${
