@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import styles from "./page.module.css";
+import Image from "next/image";
 
 export default function HomePage() {
   const { t } = useLanguage();
@@ -16,6 +17,15 @@ export default function HomePage() {
       <div className={styles.header}>
         <h1 className={styles.title}>{t("greeting")}</h1>
         <p className={styles.subtitle}>{t("subtitle")}</p>
+        <div className={styles.imageContainer}>
+          <Image
+            src="/claudia-flute2.png"
+            alt="Claudia with flute"
+            width={200}
+            height={200}
+            className={styles.fluteImage}
+          />
+        </div>
       </div>
 
       {/* Cards Container */}
