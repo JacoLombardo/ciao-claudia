@@ -88,6 +88,18 @@
   .container {
     padding-top: 80px;
   }
+
+  /* Add space between camera and buttons on desktop */
+  .controls {
+    margin-top: 1rem; /* 16px spacing between camera and buttons */
+  }
+}
+
+/* Add space between camera and buttons on mobile */
+@media (max-width: 768px) {
+  .controls {
+    margin-top: 0.5rem; /* 8px spacing between camera and buttons on mobile */
+  }
 }
 
 /* Mobile: Hide header initially, show on scroll */

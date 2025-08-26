@@ -52,7 +52,21 @@ export default function CameraPage() {
             "[data-camera-container]"
           );
           if (cameraElement) {
-            cameraElement.scrollIntoView({ behavior: "smooth" });
+            // Get the header height and camera position
+            const header = document.querySelector(`.${styles.header}`);
+            const headerHeight = header
+              ? (header as HTMLElement).offsetHeight
+              : 0;
+            const cameraTop = (cameraElement as HTMLElement).offsetTop;
+
+            // Calculate halfway point between header end and camera start
+            const halfwayPoint = headerHeight + (cameraTop - headerHeight) / 2;
+
+            // Scroll to the halfway point
+            window.scrollTo({
+              top: halfwayPoint,
+              behavior: "smooth",
+            });
           }
         }, 100);
       }
