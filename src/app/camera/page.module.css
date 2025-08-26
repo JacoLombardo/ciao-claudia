@@ -6,7 +6,6 @@
   flex-direction: column;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
-  padding-top: 80px; /* Add space for the fixed header */
 }
 
 .header {
@@ -22,13 +21,6 @@
   left: 0;
   right: 0;
   z-index: 100;
-  transform: translateY(-100%); /* Hide header above viewport initially */
-  transition: transform 0.3s ease;
-}
-
-/* Show header when scrolling up */
-.header.visible {
-  transform: translateY(0);
 }
 
 .headerContent {
@@ -89,6 +81,25 @@
   margin: 0 auto; /* Center horizontally */
   max-width: 1200px;
   width: 100%;
+}
+
+/* Desktop-only: Add space for fixed header */
+@media (min-width: 769px) {
+  .container {
+    padding-top: 80px;
+  }
+}
+
+/* Mobile: Hide header initially, show on scroll */
+@media (max-width: 768px) {
+  .header {
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .header.visible {
+    transform: translateY(0);
+  }
 }
 
 .cameraContainer {
@@ -309,10 +320,9 @@
 }
 
 .secondaryRow {
-  display: grid;
-  grid-template-columns: 0.5fr auto 0.5fr;
+  display: flex;
   align-items: center;
-  justify-items: center;
+  justify-content: center;
   width: 100%;
   gap: 10px;
 }
@@ -373,7 +383,9 @@
   }
 
   .secondaryRow {
-    grid-template-columns: 0.5fr auto 0.5fr;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 0.5rem;
   }
 

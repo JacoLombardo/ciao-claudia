@@ -33,7 +33,8 @@ export default function CameraPage() {
     const checkScreenSize = () => {
       const isMobileScreen = window.innerWidth < 768;
       isMobileRef.current = isMobileScreen;
-      setIsHeaderVisible(!isMobileScreen);
+      // On desktop, always show header. On mobile, start hidden.
+      setIsHeaderVisible(isMobileScreen ? false : true);
     };
 
     checkScreenSize();
@@ -66,15 +67,11 @@ export default function CameraPage() {
           // Scrolling down or at the top
           setIsHeaderVisible(false);
         }
-      } else {
-        // On desktop, always show header
-        setIsHeaderVisible(true);
       }
       lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
