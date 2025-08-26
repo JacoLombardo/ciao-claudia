@@ -67,6 +67,9 @@ export default function CameraPage() {
           // Scrolling down or at the top
           setIsHeaderVisible(false);
         }
+      } else {
+        // On desktop, always show header
+        setIsHeaderVisible(true);
       }
       lastScrollY.current = currentScrollY;
     };
