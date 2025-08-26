@@ -338,7 +338,6 @@ export default function CameraPage() {
             {!capturedImage ? (
               <div className={styles.cameraView}>
                 <Webcam
-                  key={`${facingMode}`}
                   ref={webcamRef}
                   audio={false}
                   screenshotFormat="image/jpeg"
@@ -348,6 +347,7 @@ export default function CameraPage() {
                   playsInline
                   onUserMedia={handleUserMedia}
                   onUserMediaError={handleUserMediaError}
+                  key={`webcam-${facingMode}`} // Force re-initialization when camera changes
                 />
 
                 {/* Claudia's Photo Overlay for preview */}

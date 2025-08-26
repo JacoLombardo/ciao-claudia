@@ -309,20 +309,12 @@
 
 .secondaryRow {
   display: grid;
-  grid-template-columns: 0.5fr auto auto 0.5fr;
+  grid-template-columns: 0.5fr auto 0.5fr;
   align-items: center;
   justify-items: center;
   width: 100%;
   gap: 10px;
   margin-top: 10px;
-}
-
-.secondaryRow > :first-child {
-  grid-column: 2;
-}
-
-.secondaryRow > :nth-child(2) {
-  grid-column: 3;
 }
 
 /* Responsive adjustments */
@@ -381,7 +373,7 @@
   }
 
   .secondaryRow {
-    grid-template-columns: 0.5fr auto auto 0.5fr;
+    grid-template-columns: 0.5fr auto 0.5fr;
     gap: 0.5rem;
   }
 
