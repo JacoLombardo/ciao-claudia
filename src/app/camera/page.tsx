@@ -504,6 +504,8 @@ export default function CameraPage() {
                     />
                   </svg>
                 </button>
+
+                <button aria-hidden="true" className={styles.spacerButton} />
               </div>
             )}
           </div>

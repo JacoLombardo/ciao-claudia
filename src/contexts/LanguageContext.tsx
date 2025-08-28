@@ -20,9 +20,9 @@ const translations = {
     // Landing page
     greeting: "Hello Claudia! 👋",
     subtitle: "Choose what you'd like to do with Claudia today!",
-    askClaudia: "Ask Claudia",
+    askClaudia: "Ask Claudia\na Story",
     askClaudiaDesc: "Get a random story from Claudia about her day",
-    takePic: "Take a Pic with Claudia",
+    takePic: "Take a Pic\nwith Claudia",
     takePicDesc: "Take a photo with Claudia's silhouette",
     madeWithLove: "Made with ❤️ for Claudia",
 
@@ -50,9 +50,9 @@ const translations = {
     // Landing page
     greeting: "Ciao Claudia! 👋",
     subtitle: "Scegli cosa vuoi fare con Claudia oggi!",
-    askClaudia: "Chiedi a Claudia",
+    askClaudia: "Chiedi a Claudia\nuna Storia",
     askClaudiaDesc: "Ricevi una storia casuale da Claudia sulla sua giornata",
-    takePic: "Fai una Foto con Claudia",
+    takePic: "Fai una Foto\ncon Claudia",
     takePicDesc: "Scatta una foto con la silhouette di Claudia",
     madeWithLove: "Fatto con ❤️ per Claudia",
 

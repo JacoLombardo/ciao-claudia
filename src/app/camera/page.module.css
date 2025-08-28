@@ -224,9 +224,11 @@
   border: none;
   border-radius: 9999px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   font-size: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2), 0 8px 12px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
 }
 
 .captureButton,
@@ -240,9 +242,11 @@
   border: none;
   border-radius: 9999px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   font-size: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2), 0 12px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
 }
 
 .switchButton {
@@ -255,8 +259,9 @@
 }
 
 .switchButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2), 0 12px 20px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
   background: linear-gradient(
     135deg,
     #e6c8a8,
@@ -271,8 +276,9 @@
 }
 
 .captureButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2), 0 16px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -3px 0 rgba(0, 0, 0, 0.2);
   background: linear-gradient(
     135deg,
     #9acd9a,
@@ -290,8 +296,9 @@
 }
 
 .retakeButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2), 0 12px 20px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
   background: linear-gradient(
     135deg,
     #e6c8a8,
@@ -305,8 +312,9 @@
 }
 
 .downloadButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2), 0 16px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -3px 0 rgba(0, 0, 0, 0.2);
   background: linear-gradient(
     135deg,
     #9acd9a,
@@ -322,6 +330,20 @@
   height: 18px;
 }
 
+.switchButton:active,
+.retakeButton:active {
+  transform: translateY(1px) scale(0.95);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.captureButton:active,
+.downloadButton:active {
+  transform: translateY(2px) scale(0.95);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+
 .helpText {
   color: #d2b48c; /* Light brown */
   font-size: 0.9rem;
@@ -330,7 +352,7 @@
   line-height: 1.5;
 }
 
-/* Centered row with three columns: left (switch), center (capture), right (spacer) */
+/* Centered row with three columns: left (switch/retake), center (capture/download), right (spacer) */
 .buttonRow {
   display: grid;
   grid-template-columns: 0.5fr auto 0.5fr;
@@ -347,11 +369,11 @@
 }
 
 .secondaryRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: 0.5fr auto 0.5fr;
   align-items: center;
-  justify-content: center;
+  justify-items: center;
   width: 100%;
-  gap: 10px;
 }
 
 /* Responsive adjustments */
@@ -410,9 +432,9 @@
   }
 
   .secondaryRow {
-    display: flex;
+    display: grid;
+    grid-template-columns: 0.5fr auto 0.5fr;
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    justify-items: center;
   }
 }
