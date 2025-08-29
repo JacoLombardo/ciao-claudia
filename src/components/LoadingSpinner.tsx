@@ -18,10 +18,10 @@ export default function LoadingSpinner({ isLoading }: LoadingSpinnerProps) {
       <div className={styles.content}>
         <div className={styles.spinner}>
           <Image
-            src="/duck3.png"
+            src="/claudia-duck.png"
             alt="Loading..."
-            width={128}
-            height={128}
+            width={192}
+            height={192}
             className={styles.image}
           />
         </div>

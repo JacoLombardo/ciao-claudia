@@ -16,9 +16,24 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Ciao Claudia",
   description: "A special app for Claudia with stories and photo features",
-  icons: {
-    icon: "/duck1.png",
-  },
+  icons: [
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "32x32",
+      url: "/claudia-duck.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "16x16",
+      url: "/claudia-duck.png",
+    },
+    {
+      rel: "apple-touch-icon",
+      url: "/claudia-duck.png",
+    },
+  ],
 };
 
 export default function RootLayout({
