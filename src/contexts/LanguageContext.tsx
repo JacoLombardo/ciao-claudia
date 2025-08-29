@@ -31,6 +31,12 @@ const translations = {
     tellMeStory: "Tell me a story, Claudia!",
     loadingCamera: "Loading camera...",
     noStories: "No stories available",
+    sendMoreStories: "Do you know one too?",
+    submitStory: "Send Story",
+    storyPlaceholder: "Write your story here...",
+    closeForm: "Close",
+    storyPopupDescription:
+      "Do you know another story about Claudia and would you like to tell us? Write it below and send it!",
 
     // Camera page
     takePicWithClaudia: "Take a Pic with Claudia",
@@ -61,6 +67,12 @@ const translations = {
     tellMeStory: "Raccontami una storia, Claudia!",
     loadingCamera: "Caricamento fotocamera...",
     noStories: "Nessuna storia disponibile",
+    sendMoreStories: "Ne conosci una anche te?",
+    submitStory: "Invia Storia",
+    storyPlaceholder: "Scrivi la tua storia qui...",
+    closeForm: "Chiudi",
+    storyPopupDescription:
+      "Conosci un'altra storia di Claudia e vorresti raccontarcela? Scrivi qua sotto ed inviala!",
 
     // Camera page
     takePicWithClaudia: "Fai una Foto con Claudia",

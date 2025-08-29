@@ -153,6 +153,154 @@
   margin-top: 2rem;
 }
 
+.emailLink {
+  display: block;
+  color: #d2b48c; /* Light brown */
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  background: rgba(210, 180, 140, 0.1); /* Light brown with transparency */
+  border: 1px solid rgba(210, 180, 140, 0.3);
+  transition: all 0.3s ease;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.emailLink:hover {
+  background: rgba(210, 180, 140, 0.2);
+  border-color: rgba(210, 180, 140, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Popup Form Styles */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.popupForm {
+  background: linear-gradient(135deg, #8fbc8f, #a8c090);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 2px solid #d2b48c;
+}
+
+.popupHeader {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.popupDescription {
+  color: #2d5a27;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #2d5a27;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.closeButton:hover {
+  background: rgba(45, 90, 39, 0.1);
+}
+
+.storyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.storyTextarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #d2b48c;
+  border-radius: 15px;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 120px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2d5a27;
+}
+
+.storyTextarea:focus {
+  outline: none;
+  border-color: #2d5a27;
+  box-shadow: 0 0 0 3px rgba(45, 90, 39, 0.1);
+}
+
+.formButtons {
+  display: flex;
+  justify-content: center;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #d2b48c, #c4a484);
+  color: #2d5a27;
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2), 0 12px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #e6c8a8, #d4b894);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .container {

@@ -20,6 +20,9 @@ export default function ChatPage() {
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [hasLoadedAll, setHasLoadedAll] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [storyText, setStoryText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch all stories from the database
   const fetchAllStories = async () => {
@@ -71,6 +74,46 @@ export default function ChatPage() {
     setDisplayedStories([]);
     setCurrentStoryIndex(0);
   }, [language]);
+
+  // Handle form submission
+  const handleSubmitStory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!storyText.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      // EmailJS configuration
+      const templateParams = {
+        to_email: "your-email@example.com", // Replace with your email
+        from_name: "Claudia Story Submission",
+        message: storyText,
+        language: language,
+      };
+
+      // You'll need to configure EmailJS with your service ID, template ID, and public key
+      // For now, we'll use a simple fetch to your API endpoint
+      const response = await fetch("/api/submit-story", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(templateParams),
+      });
+
+      if (response.ok) {
+        setStoryText("");
+        setShowForm(false);
+        alert("Story submitted successfully!");
+      } else {
+        throw new Error("Failed to submit story");
+      }
+    } catch (error) {
+      console.error("Error submitting story:", error);
+      alert("Failed to submit story. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Filter stories by current language
   const filteredStories = stories.filter(
@@ -155,9 +198,58 @@ export default function ChatPage() {
             >
               {t("tellMeStory")}
             </button>
+
+            {/* Email Link for More Stories */}
+            <button
+              onClick={() => setShowForm(true)}
+              className={styles.emailLink}
+            >
+              {t("sendMoreStories")}
+            </button>
           </>
         )}
       </div>
+
+      {/* Story Submission Popup */}
+      {showForm && (
+        <div className={styles.popupOverlay} onClick={() => setShowForm(false)}>
+          <div
+            className={styles.popupForm}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.popupHeader}>
+              <button
+                onClick={() => setShowForm(false)}
+                className={styles.closeButton}
+              >
+                ✕
+              </button>
+            </div>
+            <p className={styles.popupDescription}>
+              {t("storyPopupDescription")}
+            </p>
+            <form onSubmit={handleSubmitStory} className={styles.storyForm}>
+              <textarea
+                value={storyText}
+                onChange={(e) => setStoryText(e.target.value)}
+                placeholder={t("storyPlaceholder")}
+                className={styles.storyTextarea}
+                rows={6}
+                required
+              />
+              <div className={styles.formButtons}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !storyText.trim()}
+                  className={styles.submitButton}
+                >
+                  {isSubmitting ? "Sending..." : t("submitStory")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
