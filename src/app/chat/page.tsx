@@ -101,15 +101,21 @@ export default function ChatPage() {
       });
 
       if (response.ok) {
+        const result = await response.json();
         setStoryText("");
         setShowForm(false);
         alert("Story submitted successfully!");
       } else {
-        throw new Error("Failed to submit story");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to submit story");
       }
     } catch (error) {
       console.error("Error submitting story:", error);
-      alert("Failed to submit story. Please try again.");
+      alert(
+        `Failed to submit story: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     } finally {
       setIsSubmitting(false);
     }

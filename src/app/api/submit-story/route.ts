@@ -11,34 +11,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // EmailJS configuration
-    const emailjsData = {
-      service_id: process.env.EMAILJS_SERVICE_ID,
-      template_id: process.env.EMAILJS_TEMPLATE_ID,
-      user_id: process.env.EMAILJS_PUBLIC_KEY,
-      template_params: {
-        to_email: process.env.YOUR_EMAIL, // Your personal email
-        from_name: "Claudia Story Submission",
-        message: message,
-        language: language || "en",
-        subject: "New Story for Claudia",
+    // Send email via Formspree
+    const response = await fetch("https://formspree.io/f/mrbaedwe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    };
-
-    // Send email via EmailJS
-    const response = await fetch(
-      `https://api.emailjs.com/api/v1.0/email/send`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(emailjsData),
-      }
-    );
+      body: JSON.stringify({
+        message: message,
+        language: language === "it" ? "Italian" : "English",
+        subject: "New Story for Claudia",
+        _subject: "New Story for Claudia",
+      }),
+    });
 
     if (!response.ok) {
-      throw new Error(`EmailJS API error: ${response.statusText}`);
+      throw new Error(`Formspree error: ${response.statusText}`);
     }
 
     return NextResponse.json(
