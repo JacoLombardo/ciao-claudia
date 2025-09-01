@@ -49,6 +49,20 @@ const translations = {
       "Position yourself next to Claudia's photo and take a picture!",
     greatShot: "Great shot! You can download it or take another one.",
 
+    // Gallery
+    photoGallery: "Photo Gallery",
+    saveToGallery: "Save to Gallery",
+    addToGalleryQuestion: "Would you like to add this photo to your gallery?",
+    yes: "Yes",
+    no: "No",
+    saving: "Saving...",
+    loadingPhotos: "Loading photos...",
+    retry: "Retry",
+    noPhotosYet: "No photos yet",
+    noPhotosDescription: "Take some photos with Claudia to see them here!",
+    photo: "photo",
+    photos: "photos",
+
     // Common
     loading: "Loading...",
   },
@@ -84,6 +98,20 @@ const translations = {
     positionYourself:
       "Posizionati accanto alla foto di Claudia e scatta una foto!",
     greatShot: "Ottimo scatto! Puoi scaricarla o farne un'altra.",
+
+    // Gallery
+    photoGallery: "Galleria Foto",
+    saveToGallery: "Salva nella Galleria",
+    addToGalleryQuestion: "Vorresti aggiungere questa foto alla tua galleria?",
+    yes: "Sì",
+    no: "No",
+    saving: "Salvataggio...",
+    loadingPhotos: "Caricamento foto...",
+    retry: "Riprova",
+    noPhotosYet: "Nessuna foto ancora",
+    noPhotosDescription: "Scatta alcune foto con Claudia per vederle qui!",
+    photo: "foto",
+    photos: "foto",
 
     // Common
     loading: "Caricamento...",

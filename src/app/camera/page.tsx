@@ -7,6 +7,8 @@ import Webcam from "react-webcam";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import PhotoConfirmationModal from "@/components/PhotoConfirmationModal";
+import PhotoGallery from "@/components/PhotoGallery";
 import styles from "./page.module.css";
 
 export default function CameraPage() {
@@ -25,6 +27,9 @@ export default function CameraPage() {
   const [isPortrait, setIsPortrait] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Start with loading true
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState<"camera" | "gallery">("camera");
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const lastScrollY = useRef(0);
   const isMobileRef = useRef(false);
 
@@ -86,14 +91,20 @@ export default function CameraPage() {
 
   // Choose constraints once and lock to avoid flapping
   const useMobileLayout = isMobile;
-  const videoConstraints = {
-    ...(lockedConstraints || {
-      width: useMobileLayout ? 1280 : isPortrait ? 720 : 1280,
-      height: useMobileLayout ? 720 : isPortrait ? 1280 : 720,
-      aspectRatio: useMobileLayout ? 16 / 9 : isPortrait ? 3 / 4 : 16 / 9,
-    }),
-    facingMode: facingMode, // Always use current facingMode
+  const videoConstraints = lockedConstraints || {
+    width: useMobileLayout ? 1280 : isPortrait ? 720 : 1280,
+    height: useMobileLayout ? 720 : isPortrait ? 1280 : 720,
+    aspectRatio: useMobileLayout ? 16 / 9 : isPortrait ? 3 / 4 : 16 / 9,
+    facingMode: facingMode,
   };
+
+  // Debug logging
+  console.log("Camera state:", {
+    isMobile,
+    isPortrait,
+    useMobileLayout,
+    lockedConstraints: !!lockedConstraints,
+  });
 
   // Update locked constraints when facingMode changes
   useEffect(() => {
@@ -113,6 +124,7 @@ export default function CameraPage() {
     const updateFromContainer = () => {
       const rect = element.getBoundingClientRect();
       const ratio = rect.height / Math.max(1, rect.width);
+
       // Hysteresis to avoid flapping around ~1.0
       let nextIsPortrait = lastIsPortraitRef.current ?? ratio >= 1.0;
       if (ratio > 1.05) nextIsPortrait = true;
@@ -165,6 +177,27 @@ export default function CameraPage() {
   useEffect(() => {
     console.log("Loading state changed to:", isLoading);
   }, [isLoading]);
+
+  // Reset camera state when switching back to camera tab
+  useEffect(() => {
+    if (activeTab === "camera") {
+      // Reset captured image when switching to camera tab
+      setCapturedImage(null);
+      setShowConfirmationModal(false);
+
+      // Debug: Log container dimensions after a short delay
+      setTimeout(() => {
+        if (containerRef.current) {
+          const rect = containerRef.current.getBoundingClientRect();
+          console.log("Camera container dimensions:", {
+            width: rect.width,
+            height: rect.height,
+            maxWidth: window.getComputedStyle(containerRef.current).maxWidth,
+          });
+        }
+      }, 100);
+    }
+  }, [activeTab]);
 
   // Handle camera loading state
   const handleUserMedia = useCallback(() => {
@@ -258,6 +291,7 @@ export default function CameraPage() {
             // Convert canvas to data URL
             const mergedImageSrc = canvas.toDataURL("image/jpeg", 0.9);
             setCapturedImage(mergedImageSrc);
+            setShowConfirmationModal(true);
           };
           claudiaImg.src = "/claudia.png";
         };
@@ -267,6 +301,57 @@ export default function CameraPage() {
   }, [webcamRef, isMobile]);
 
   const retake = () => {
+    setCapturedImage(null);
+    setShowConfirmationModal(false);
+  };
+
+  const handleSaveToGallery = async () => {
+    if (!capturedImage) return;
+
+    try {
+      setIsUploading(true);
+
+      // Upload to Cloudinary
+      const uploadResponse = await fetch("/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageData: capturedImage }),
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const uploadData = await uploadResponse.json();
+
+      // Save to MongoDB
+      const saveResponse = await fetch("/api/photos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: uploadData.url }),
+      });
+
+      if (!saveResponse.ok) {
+        throw new Error("Failed to save photo");
+      }
+
+      console.log("Photo saved to gallery successfully");
+      setShowConfirmationModal(false);
+      setCapturedImage(null);
+    } catch (error) {
+      console.error("Error saving photo to gallery:", error);
+      alert("Failed to save photo to gallery. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleCancelSave = () => {
+    setShowConfirmationModal(false);
     setCapturedImage(null);
   };
 
@@ -368,51 +453,105 @@ export default function CameraPage() {
       <LoadingSpinner isLoading={isLoading} />
       {/* Camera interface renders immediately; spinner overlays it */}
       <div className={styles.content}>
-        <div
-          className={styles.cameraContainer}
-          ref={containerRef}
-          data-camera-container
-        >
-          {/* Camera View */}
-          <div
-            className={`${styles.cameraView} ${
-              useMobileLayout ? styles.cameraViewMobile : ""
+        {/* Tab Navigation */}
+        <div className={styles.tabContainer}>
+          <button
+            className={`${styles.tab} ${
+              activeTab === "camera" ? styles.activeTab : ""
             }`}
+            onClick={() => setActiveTab("camera")}
           >
-            {!capturedImage ? (
-              <div className={styles.cameraView}>
-                <Webcam
-                  ref={webcamRef}
-                  audio={false}
-                  screenshotFormat="image/jpeg"
-                  videoConstraints={videoConstraints}
-                  className={styles.webcam}
-                  mirrored={facingMode === "user"}
-                  playsInline
-                  onUserMedia={handleUserMedia}
-                  onUserMediaError={handleUserMediaError}
-                  key={`webcam-${facingMode}`} // Force re-initialization when camera changes
-                />
+            <svg
+              className={styles.tabIcon}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            {t("takePicWithClaudia")}
+          </button>
+          <button
+            className={`${styles.tab} ${
+              activeTab === "gallery" ? styles.activeTab : ""
+            }`}
+            onClick={() => setActiveTab("gallery")}
+          >
+            <svg
+              className={styles.tabIcon}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            {t("photoGallery")}
+          </button>
+        </div>
 
-                {/* Claudia's Photo Overlay for preview */}
-                <div className={styles.overlayContainer}>
-                  <div
-                    className={styles.claudiaContainer}
-                    style={{ marginLeft: "35%" }}
-                  >
-                    <Image
-                      ref={claudiaImageRef}
-                      src="/claudia.png"
-                      alt="Claudia"
-                      width={500}
-                      height={750}
-                      className={styles.claudiaImage}
-                    />
+        {/* Tab Content */}
+        {activeTab === "camera" ? (
+          <div
+            className={styles.cameraContainer}
+            ref={containerRef}
+            data-camera-container
+          >
+            {/* Camera View */}
+            <div
+              className={`${styles.cameraView} ${
+                useMobileLayout ? styles.cameraViewMobile : ""
+              }`}
+            >
+              {!capturedImage ? (
+                <>
+                  <Webcam
+                    ref={webcamRef}
+                    audio={false}
+                    screenshotFormat="image/jpeg"
+                    videoConstraints={videoConstraints}
+                    className={styles.webcam}
+                    mirrored={facingMode === "user"}
+                    playsInline
+                    onUserMedia={handleUserMedia}
+                    onUserMediaError={handleUserMediaError}
+                    key={`webcam-${facingMode}`} // Force re-initialization when camera changes
+                  />
+
+                  {/* Claudia's Photo Overlay for preview */}
+                  <div className={styles.overlayContainer}>
+                    <div
+                      className={styles.claudiaContainer}
+                      style={{ marginLeft: "35%" }}
+                    >
+                      <Image
+                        ref={claudiaImageRef}
+                        src="/claudia.png"
+                        alt="Claudia"
+                        width={300}
+                        height={450}
+                        className={styles.claudiaImage}
+                        key="claudia"
+                      />
+                    </div>
                   </div>
-                </div>
-              </div>
-            ) : (
-              <div className={styles.cameraView}>
+                </>
+              ) : (
                 <Image
                   src={capturedImage}
                   alt="Captured photo with Claudia"
@@ -420,97 +559,112 @@ export default function CameraPage() {
                   height={720}
                   className={styles.capturedImage}
                 />
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* Controls */}
+            <div className={styles.controls}>
+              {!capturedImage ? (
+                <div className={styles.buttonRow}>
+                  <button
+                    onClick={toggleCamera}
+                    className={styles.switchButton}
+                  >
+                    <svg
+                      className={styles.switchIcon}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
+                    </svg>
+                  </button>
+
+                  <button onClick={capture} className={styles.captureButton}>
+                    <svg
+                      className={styles.captureIcon}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </button>
+
+                  <button aria-hidden="true" className={styles.spacerButton} />
+                </div>
+              ) : (
+                <div className={styles.secondaryRow}>
+                  <button onClick={retake} className={styles.retakeButton}>
+                    <svg
+                      className={styles.retakeIcon}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                      />
+                    </svg>
+                  </button>
+
+                  <button
+                    onClick={downloadImage}
+                    className={styles.downloadButton}
+                  >
+                    <svg
+                      className={styles.downloadIcon}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                      />
+                    </svg>
+                  </button>
+
+                  <button aria-hidden="true" className={styles.spacerButton} />
+                </div>
+              )}
+            </div>
           </div>
-
-          {/* Controls */}
-          <div className={styles.controls}>
-            {!capturedImage ? (
-              <div className={styles.buttonRow}>
-                <button onClick={toggleCamera} className={styles.switchButton}>
-                  <svg
-                    className={styles.switchIcon}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                </button>
-
-                <button onClick={capture} className={styles.captureButton}>
-                  <svg
-                    className={styles.captureIcon}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </button>
-
-                <button aria-hidden="true" className={styles.spacerButton} />
-              </div>
-            ) : (
-              <div className={styles.secondaryRow}>
-                <button onClick={retake} className={styles.retakeButton}>
-                  <svg
-                    className={styles.retakeIcon}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-                    />
-                  </svg>
-                </button>
-
-                <button
-                  onClick={downloadImage}
-                  className={styles.downloadButton}
-                >
-                  <svg
-                    className={styles.downloadIcon}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                  </svg>
-                </button>
-
-                <button aria-hidden="true" className={styles.spacerButton} />
-              </div>
-            )}
-          </div>
-        </div>
+        ) : (
+          <PhotoGallery />
+        )}
       </div>
+
+      {/* Photo Confirmation Modal */}
+      <PhotoConfirmationModal
+        isOpen={showConfirmationModal}
+        onClose={() => setShowConfirmationModal(false)}
+        onConfirm={handleSaveToGallery}
+        onCancel={handleCancelSave}
+        imageSrc={capturedImage || ""}
+        isUploading={isUploading}
+      />
     </div>
   );
 }

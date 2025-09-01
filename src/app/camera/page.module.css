@@ -83,6 +83,49 @@
   width: 100%;
 }
 
+/* Tab Navigation */
+.tabContainer {
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 0.5rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: #d2b48c;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e6c8a8;
+}
+
+.tab.activeTab {
+  background: linear-gradient(135deg, #8fbc8f, #7cb342);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tabIcon {
+  width: 18px;
+  height: 18px;
+}
+
 /* Desktop-only: Add space for fixed header */
 @media (min-width: 769px) {
   .container {
@@ -131,28 +174,33 @@
 
 .cameraContainer {
   width: 100%;
-  max-width: 800px;
+  max-width: 800px !important;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.12rem;
+  min-height: 400px;
+  max-height: 600px;
+  margin: 0 auto;
 }
 
 .cameraView {
   position: relative;
   width: 100%;
-  height: 100%;
+  max-width: 800px !important;
+  height: 400px;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   border: 3px solid #d2b48c; /* Light brown border */
 }
 
-/* Mobile-sized camera container: 90% width, 75% viewport height */
+/* Mobile-sized camera container: 90% width, 60% viewport height */
 .cameraViewMobile {
   width: 90vw;
-  height: 75vh;
-  max-width: none;
+  height: 60vh;
+  max-width: 800px;
+  max-height: 500px;
 }
 
 .webcam {
@@ -182,19 +230,29 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  max-width: 50%;
+  max-height: 300px;
 }
 
 .claudiaImage {
-  max-width: 50%;
-  height: auto;
+  max-width: 50% !important;
+  height: auto !important;
   object-fit: contain;
+  max-height: 300px !important;
+  width: auto !important;
 }
 
-/* Mobile silhouette: 85% of screen width with proportional height */
+/* Mobile silhouette: reasonable size with max-width constraint */
+.cameraViewMobile .claudiaContainer {
+  max-width: 60%;
+  max-height: 400px;
+}
+
 .cameraViewMobile .claudiaImage {
-  width: 85vw;
-  height: auto;
-  max-width: none;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 100% !important;
+  width: auto !important;
   margin-left: 10% !important;
 }
 
@@ -436,5 +494,21 @@
     grid-template-columns: 0.5fr auto 0.5fr;
     align-items: center;
     justify-items: center;
+  }
+
+  /* Mobile tab styles */
+  .tabContainer {
+    margin-bottom: 1rem;
+    padding: 0.25rem;
+  }
+
+  .tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .tabIcon {
+    width: 16px;
+    height: 16px;
   }
 }
