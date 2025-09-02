@@ -12,6 +12,7 @@
     "populate-bilingual": "node scripts/populate-bilingual.js"
   },
   "dependencies": {
+    "cloudinary": "^2.7.0",
     "mongodb": "^6.3.0",
     "next": "15.4.6",
     "react": "19.1.0",

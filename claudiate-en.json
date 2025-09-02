@@ -1,4 +1,16 @@
 {
+  "gallery": "Gallery",
+  "saveToGallery": "Save to Gallery",
+  "saveToGalleryConfirm": "Would you like to save this photo to your gallery?",
+  "yes": "Yes",
+  "no": "No",
+  "saving": "Saving...",
+  "saved": "Saved!",
+  "error": "Error",
+  "noPhotos": "No photos in gallery yet",
+  "takeFirstPhoto": "Take your first photo with Claudia!",
+  "backToCamera": "Back To Camera",
+
   "claudiate": [
     {
       "text": "In Morocco with Edoardo, I refused to learn how to handle currency exchange. At some point, he got tired of doing the math for me… and well, I ended up paying 20 euros for a Fanta...",
