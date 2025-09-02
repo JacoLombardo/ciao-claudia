@@ -43,20 +43,7 @@ export default function GalleryPage() {
     }
   };
 
-  const deleteImage = async (imageId: string) => {
-    try {
-      const response = await fetch(`/api/gallery/${imageId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete image");
-      }
-      setImages(images.filter((img) => img.id !== imageId));
-    } catch (err) {
-      console.error("Error deleting image:", err);
-      setError(err instanceof Error ? err.message : "Unknown error");
-    }
-  };
+
 
   const openFullScreen = (index: number) => {
     setFullScreenIndex(index);

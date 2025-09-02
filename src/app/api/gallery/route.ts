@@ -7,7 +7,7 @@ const MONGODB_URI = process.env.MONGODB_URI || "";
 interface GalleryImage {
   id: string;
   url: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
 interface MongoGalleryImage {
@@ -107,4 +107,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

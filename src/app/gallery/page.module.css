@@ -249,37 +249,7 @@
   transform: scale(1.02);
 }
 
-.deleteButton {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: rgba(220, 38, 38, 0.9);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0;
-}
 
-.imageCard:hover .deleteButton {
-  opacity: 1;
-}
-
-.deleteButton:hover {
-  background: rgba(220, 38, 38, 1);
-  transform: scale(1.1);
-}
-
-.deleteIcon {
-  width: 16px;
-  height: 16px;
-}
 
 .imageDate {
   position: absolute;
@@ -311,16 +281,7 @@
     height: 150px;
   }
 
-  .deleteButton {
-    opacity: 1; /* Always visible on mobile */
-    width: 28px;
-    height: 28px;
-  }
 
-  .deleteIcon {
-    width: 14px;
-    height: 14px;
-  }
 
   .imageDate {
     font-size: 0.8rem;
