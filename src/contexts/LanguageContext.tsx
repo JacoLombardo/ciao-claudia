@@ -62,10 +62,6 @@ const translations = {
     error: "Error",
     noPhotos: "No photos in gallery yet",
     takeFirstPhoto: "Take your first photo with Claudia!",
-    retry: "Retry",
-    close: "Close",
-    previous: "Previous",
-    next: "Next",
 
     // Common
     loading: "Loading...",
@@ -115,10 +111,6 @@ const translations = {
     error: "Errore",
     noPhotos: "Nessuna foto in galleria ancora",
     takeFirstPhoto: "Scatta la tua prima foto con Claudia!",
-    retry: "Riprova",
-    close: "Chiudi",
-    previous: "Precedente",
-    next: "Successivo",
 
     // Common
     loading: "Caricamento...",

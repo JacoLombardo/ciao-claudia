@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { useLanguage } from "@/contexts/LanguageContext";
 import styles from "./FullScreenGallery.module.css";
 
 interface GalleryImage {
@@ -22,8 +21,15 @@ export default function FullScreenGallery({
   initialIndex,
   onClose,
 }: FullScreenGalleryProps) {
-  const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  }, [images.length]);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  }, [images.length]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -42,15 +48,7 @@ export default function FullScreenGallery({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
-
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
+  }, [onClose, goToPrevious, goToNext]);
 
   const handleImageClick = (e: React.MouseEvent) => {
     e.stopPropagation();

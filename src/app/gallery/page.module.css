@@ -27,10 +27,6 @@
   transition: transform 0.3s ease;
 }
 
-.headerHidden {
-  transform: translateY(-100%);
-}
-
 .headerContent {
   max-width: 1200px;
   margin: 0 auto;
@@ -139,23 +135,6 @@
   color: #dc2626;
 }
 
-.retryButton {
-  background: linear-gradient(135deg, #8fbc8f, #7cb342);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  margin-top: 1rem;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.retryButton:hover {
-  background: linear-gradient(135deg, #9acd9a, #8bc34a);
-  transform: translateY(-1px);
-}
-
 .emptyState {
   display: flex;
   flex-direction: column;
@@ -213,7 +192,7 @@
 
 .galleryGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 3px;
   width: 100%;
   max-width: 1000px;
@@ -235,7 +214,7 @@
 .imageContainer {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 240px;
   overflow: hidden;
   border-radius: 0px;
   /* Prevent layout shifts */
@@ -287,9 +266,9 @@
   }
 
   .imageContainer {
-    height: 120px;
+    height: 140px;
     /* Ensure consistent height on mobile */
-    min-height: 120px;
+    min-height: 140px;
     border-radius: 0px;
   }
 
