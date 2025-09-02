@@ -25,6 +25,11 @@ export default function CameraPage() {
   const [isPortrait, setIsPortrait] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Start with loading true
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
   const lastScrollY = useRef(0);
   const isMobileRef = useRef(false);
 
@@ -258,6 +263,9 @@ export default function CameraPage() {
             // Convert canvas to data URL
             const mergedImageSrc = canvas.toDataURL("image/jpeg", 0.9);
             setCapturedImage(mergedImageSrc);
+
+            // Show save dialog after capturing
+            setShowSaveDialog(true);
           };
           claudiaImg.src = "/claudia.png";
         };
@@ -268,6 +276,62 @@ export default function CameraPage() {
 
   const retake = () => {
     setCapturedImage(null);
+    setShowSaveDialog(false);
+    setSaveStatus("idle");
+  };
+
+  const saveToGallery = async () => {
+    if (!capturedImage) return;
+
+    try {
+      setIsSaving(true);
+      setSaveStatus("saving");
+
+      // Upload to Cloudinary
+      const uploadResponse = await fetch("/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageData: capturedImage }),
+      });
+
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json();
+        throw new Error(errorData.error || "Failed to upload image");
+      }
+
+      const uploadData = await uploadResponse.json();
+
+      // Save to gallery
+      const galleryResponse = await fetch("/api/gallery", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: uploadData.url }),
+      });
+
+      if (!galleryResponse.ok) {
+        throw new Error("Failed to save to gallery");
+      }
+
+      setSaveStatus("saved");
+      setTimeout(() => {
+        setShowSaveDialog(false);
+        setSaveStatus("idle");
+      }, 2000);
+    } catch (error) {
+      console.error("Error saving to gallery:", error);
+      setSaveStatus("error");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const skipSave = () => {
+    setShowSaveDialog(false);
+    setSaveStatus("idle");
   };
 
   const downloadImage = () => {
@@ -466,7 +530,21 @@ export default function CameraPage() {
                   </svg>
                 </button>
 
-                <button aria-hidden="true" className={styles.spacerButton} />
+                <Link href="/gallery" className={styles.galleryButton}>
+                  <svg
+                    className={styles.galleryIcon}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </Link>
               </div>
             ) : (
               <div className={styles.secondaryRow}>
@@ -505,12 +583,100 @@ export default function CameraPage() {
                   </svg>
                 </button>
 
-                <button aria-hidden="true" className={styles.spacerButton} />
+                <Link href="/gallery" className={styles.galleryButton}>
+                  <svg
+                    className={styles.galleryIcon}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </Link>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Save to Gallery Dialog */}
+      {showSaveDialog && (
+        <div className={styles.popupOverlay} onClick={skipSave}>
+          <div
+            className={styles.popupForm}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.popupHeader}>
+              <button onClick={skipSave} className={styles.closeButton}>
+                ✕
+              </button>
+            </div>
+            <p className={styles.popupDescription}>
+              Would you like to save the photo
+              <br />
+              to the app's gallery?
+            </p>
+
+            {saveStatus === "saving" && (
+              <div className={styles.savingIndicator}>
+                <div className={styles.spinner}></div>
+                <p>{t("saving")}</p>
+              </div>
+            )}
+
+            {saveStatus === "saved" && (
+              <div className={styles.successMessage}>
+                <svg
+                  className={styles.successIcon}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <p>{t("saved")}</p>
+              </div>
+            )}
+
+            {saveStatus === "error" && (
+              <div className={styles.errorMessage}>
+                <svg
+                  className={styles.errorIcon}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+                <p>{t("error")}</p>
+              </div>
+            )}
+
+            {saveStatus === "idle" && (
+              <div className={styles.formButtons}>
+                <button onClick={saveToGallery} className={styles.submitButton}>
+                  Yes
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

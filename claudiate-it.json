@@ -1,4 +1,17 @@
 {
+  "gallery": "Galleria",
+  "saveToGallery": "Salva in Galleria",
+  "saveToGalleryConfirm": "Vuoi salvare questa foto nella tua galleria?",
+  "yes": "Sì",
+  "no": "No",
+  "saving": "Salvataggio...",
+  "saved": "Salvato!",
+  "error": "Errore",
+  "noPhotos": "Nessuna foto in galleria ancora",
+  "takeFirstPhoto": "Scatta la tua prima foto con Claudia!",
+  "backToCamera": "Torna alla Fotocamera",
+  "retry": "Riprova",
+  "delete": "Elimina",
   "claudiate": [
     {
       "text": "In Marocco con Edoardo mi rifiutavo di imparare il cambio della valuta. A un certo punto lui si è stufato di fare i conti per me… e niente, ho finito per pagare una Fanta 20 euro...",
