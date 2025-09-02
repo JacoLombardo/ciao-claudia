@@ -21,10 +21,32 @@ export default function GalleryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [fullScreenIndex, setFullScreenIndex] = useState<number | null>(null);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     fetchImages();
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Show header when scrolling up, hide when scrolling down
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down and past 100px - hide header
+        setIsHeaderVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up - show header
+        setIsHeaderVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   const fetchImages = async () => {
     try {
@@ -42,8 +64,6 @@ export default function GalleryPage() {
       setIsLoading(false);
     }
   };
-
-
 
   const openFullScreen = (index: number) => {
     setFullScreenIndex(index);
@@ -67,7 +87,11 @@ export default function GalleryPage() {
       <LanguageSwitcher />
 
       {/* Header */}
-      <div className={styles.header}>
+      <div
+        className={`${styles.header} ${
+          !isHeaderVisible ? styles.headerHidden : ""
+        }`}
+      >
         <div className={styles.headerContent}>
           <Link href="/camera" className={styles.backLink}>
             <svg

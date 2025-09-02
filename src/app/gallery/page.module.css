@@ -6,6 +6,9 @@
   flex-direction: column;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
+  /* Ensure smooth scrolling */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .header {
@@ -21,6 +24,11 @@
   left: 0;
   right: 0;
   z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+.headerHidden {
+  transform: translateY(-100%);
 }
 
 .headerContent {
@@ -90,16 +98,15 @@
   }
 }
 
-/* Mobile: Hide header initially, show on scroll */
+/* Mobile: Smart header behavior - hide on scroll down, show on scroll up */
 @media (max-width: 768px) {
   .header {
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    z-index: auto;
-    transform: none;
-    transition: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    transition: transform 0.3s ease;
   }
 
   .headerContent {
@@ -118,6 +125,7 @@
 
   .content {
     padding: 1rem;
+    margin-top: 120px; /* Add space for fixed header on mobile */
   }
 }
 
@@ -205,23 +213,23 @@
 
 .galleryGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 3px;
   width: 100%;
   max-width: 1000px;
 }
 
 .imageCard {
   background: white;
-  border-radius: 16px;
+  border-radius: 0px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
 .imageCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .imageContainer {
@@ -229,6 +237,9 @@
   width: 100%;
   height: 200px;
   overflow: hidden;
+  border-radius: 0px;
+  /* Prevent layout shifts */
+  contain: layout style paint;
 }
 
 .galleryImage {
@@ -237,7 +248,7 @@
 }
 
 .imageCard:hover .galleryImage {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .imageContainer {
@@ -248,8 +259,6 @@
 .imageContainer:hover {
   transform: scale(1.02);
 }
-
-
 
 .imageDate {
   position: absolute;
@@ -273,15 +282,16 @@
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .galleryGrid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 3px;
   }
 
   .imageContainer {
-    height: 150px;
+    height: 120px;
+    /* Ensure consistent height on mobile */
+    min-height: 120px;
+    border-radius: 0px;
   }
-
-
 
   .imageDate {
     font-size: 0.8rem;
