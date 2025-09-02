@@ -49,6 +49,25 @@ const translations = {
       "Position yourself next to Claudia's photo and take a picture!",
     greatShot: "Great shot! You can download it or take another one.",
 
+    // Gallery page
+    gallery: "Gallery",
+    backToCamera: "Back To Camera",
+    saveToGallery: "Save to Gallery",
+    saveToGalleryConfirm:
+      "Would you like to save the photo\nto the app's gallery?",
+    yes: "Yes",
+    no: "No",
+    saving: "Saving...",
+    saved: "Saved!",
+    error: "Error",
+    noPhotos: "No photos in gallery yet",
+    takeFirstPhoto: "Take your first photo with Claudia!",
+    retry: "Retry",
+    delete: "Delete",
+    close: "Close",
+    previous: "Previous",
+    next: "Next",
+
     // Common
     loading: "Loading...",
   },
@@ -84,6 +103,24 @@ const translations = {
     positionYourself:
       "Posizionati accanto alla foto di Claudia e scatta una foto!",
     greatShot: "Ottimo scatto! Puoi scaricarla o farne un'altra.",
+
+    // Gallery page
+    gallery: "Galleria",
+    backToCamera: "Torna Alla Fotocamera",
+    saveToGallery: "Salva in Galleria",
+    saveToGalleryConfirm: "Vuoi salvare la foto\nnella galleria dell'app?",
+    yes: "Sì",
+    no: "No",
+    saving: "Salvataggio...",
+    saved: "Salvato!",
+    error: "Errore",
+    noPhotos: "Nessuna foto in galleria ancora",
+    takeFirstPhoto: "Scatta la tua prima foto con Claudia!",
+    retry: "Riprova",
+    delete: "Elimina",
+    close: "Chiudi",
+    previous: "Precedente",
+    next: "Successivo",
 
     // Common
     loading: "Caricamento...",

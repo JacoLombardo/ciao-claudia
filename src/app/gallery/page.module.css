@@ -240,6 +240,15 @@
   transform: scale(1.05);
 }
 
+.imageContainer {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.imageContainer:hover {
+  transform: scale(1.02);
+}
+
 .deleteButton {
   position: absolute;
   top: 0.5rem;
@@ -272,15 +281,23 @@
   height: 16px;
 }
 
-.imageInfo {
-  padding: 1rem;
-  background: white;
+.imageDate {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-.imageDate {
-  font-size: 0.875rem;
-  color: #6b7280;
-  font-weight: 500;
+.imageCard:hover .imageDate {
+  opacity: 1;
 }
 
 /* Mobile adjustments */
@@ -305,12 +322,10 @@
     height: 14px;
   }
 
-  .imageInfo {
-    padding: 0.75rem;
-  }
-
   .imageDate {
     font-size: 0.8rem;
+    bottom: 0.25rem;
+    left: 0.25rem;
+    padding: 0.25rem 0.5rem;
   }
 }
-

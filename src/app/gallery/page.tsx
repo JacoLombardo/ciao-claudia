@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import FullScreenGallery from "@/components/FullScreenGallery";
 import styles from "./page.module.css";
 
 interface GalleryImage {
@@ -19,6 +20,7 @@ export default function GalleryPage() {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [fullScreenIndex, setFullScreenIndex] = useState<number | null>(null);
 
   useEffect(() => {
     fetchImages();
@@ -54,6 +56,14 @@ export default function GalleryPage() {
       console.error("Error deleting image:", err);
       setError(err instanceof Error ? err.message : "Unknown error");
     }
+  };
+
+  const openFullScreen = (index: number) => {
+    setFullScreenIndex(index);
+  };
+
+  const closeFullScreen = () => {
+    setFullScreenIndex(null);
   };
 
   if (isLoading) {
@@ -163,9 +173,13 @@ export default function GalleryPage() {
           </div>
         ) : (
           <div className={styles.galleryGrid}>
-            {images.map((image) => (
+            {images.map((image, index) => (
               <div key={image.id} className={styles.imageCard}>
-                <div className={styles.imageContainer}>
+                <div
+                  className={styles.imageContainer}
+                  onClick={() => openFullScreen(index)}
+                  style={{ cursor: "pointer" }}
+                >
                   <Image
                     src={image.url}
                     alt="Gallery photo with Claudia"
@@ -173,27 +187,7 @@ export default function GalleryPage() {
                     className={styles.galleryImage}
                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                   />
-                  <button
-                    onClick={() => deleteImage(image.id)}
-                    className={styles.deleteButton}
-                    title={t("delete")}
-                  >
-                    <svg
-                      className={styles.deleteIcon}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className={styles.imageInfo}>
+
                   <span className={styles.imageDate}>
                     {new Date(image.createdAt).toLocaleDateString()}
                   </span>
@@ -203,7 +197,15 @@ export default function GalleryPage() {
           </div>
         )}
       </div>
+
+      {/* Full Screen Gallery */}
+      {fullScreenIndex !== null && (
+        <FullScreenGallery
+          images={images}
+          initialIndex={fullScreenIndex}
+          onClose={closeFullScreen}
+        />
+      )}
     </div>
   );
 }
-

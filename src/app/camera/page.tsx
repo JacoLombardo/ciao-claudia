@@ -617,9 +617,7 @@ export default function CameraPage() {
               </button>
             </div>
             <p className={styles.popupDescription}>
-              Would you like to save the photo
-              <br />
-              to the app's gallery?
+              {t("saveToGalleryConfirm")}
             </p>
 
             {saveStatus === "saving" && (
@@ -670,7 +668,7 @@ export default function CameraPage() {
             {saveStatus === "idle" && (
               <div className={styles.formButtons}>
                 <button onClick={saveToGallery} className={styles.submitButton}>
-                  Yes
+                  {t("yes")}
                 </button>
               </div>
             )}
